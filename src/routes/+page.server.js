@@ -11,7 +11,6 @@ export const prerender = false;
  * @property {string} description
  * @property {"" | "1" | "2" | "3"} medal
  * @property {{ code: string, description: string }} discipline
- * @property {{ code: string, description: string }} venue
  * @property {{ } | { team1: { code: string, description: string }, team2: { code: string, description: string } }} [match]
  */
 

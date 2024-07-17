@@ -1,10 +1,12 @@
 <script>
+	import ics from "ics";
 	/** @typedef {import("./+page.server.js").Event} Event */
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Rings from "$lib/Rings.svelte";
 	import Medal from "$lib/Medal.svelte";
 	import Card from "$lib/Card.svelte";
+    import { createIcsEntry } from "$lib/create-ics-entry.js";
 
 	let initOpen = ($page.url.searchParams.get("open") ?? "").split(":");
 	let initSel = ($page.url.searchParams.get("selected") ?? "").split(":");
@@ -118,18 +120,33 @@
 </script>
 
 <svelte:head>
-	<title>Home</title>
+	<title>olympicks</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
 <Rings />
 
 <div class="flex flex-col">
-	<div class="text-sm sticky top-0 z-20 text-gray-600">
+	<div
+		class="text-sm top-2 sticky z-20 text-gray-600 bg-white bg-opacity-30 self-end"
+	>
 		{#if selected.length > 0}
 			<button
+				class="cursor-pointer font-light text-gray-50 mr-2 rounded px-2 border border-gray-100 bg-gray-800"
+				onmousedown={async () => {
+					let contents = createIcsEntry(selected);
+					let file = new File([contents], "olympicks.ics", { type: "text/calendar" });
+					let url = URL.createObjectURL(file);
+					let a = document.createElement("a");
+					a.href = url;
+					a.download = "olympicks.ics";
+					a.click();
+					URL.revokeObjectURL(url);
+				}}><b>Export</b></button
+			>
+			<button
 				class="cursor-pointer border-none text-bold mr-2"
-				onclick={() =>
+				onmousedown={() =>
 					days.forEach((day) => {
 						day.disciplines.forEach((discipline) => {
 							discipline.events.forEach((event) => {
