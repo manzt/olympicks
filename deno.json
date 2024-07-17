@@ -1,0 +1,13 @@
+{
+	"tasks": {
+		"run": "deno run -A --unstable-temporal main.ts"
+	},
+	"fmt": {
+		"useTabs": true
+	},
+	"lint": {
+		"rules": {
+			"exclude": ["prefer-const"]
+		}
+	}
+}
