@@ -1,3 +1,4 @@
+// deno run -A --unstable-temporal main.ts
 import { JSDOM } from "npm:jsdom@11.8.0";
 import { z } from "npm:zod@3.23.8";
 
