@@ -1,41 +1,82 @@
 <script>
+	/** @typedef {import("./+page.server.js").Event} Event */
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
-	import Card from "./Card.svelte";
-	let data = /** @type {import("./$types").PageData} */ ($page.data);
+	import Rings from "$lib/Rings.svelte";
+	import Medal from "$lib/Medal.svelte";
+	import Card from "$lib/Card.svelte";
 
-	let init = ($page.url.searchParams.get("selected") ?? "").split(":");
-	let days = data.days.map((day) => ({
-		date: day.date,
-		disciplines: day.disciplines.map((discipline) => {
-			let open = $state(false);
-			return {
-				code: discipline.code,
-				/** @type {boolean} */
-				get open() {
-					return open;
-				},
-				/** @param {boolean} update */
-				set open(update) {
-					open = update;
-				},
-				events: discipline.events.map((evt) => {
-					let checked = $state(init.includes(evt.id));
-					return {
-						...evt,
-						/** @type {boolean} */
-						get checked() {
-							return checked;
-						},
-						/** @param {boolean} update */
-						set checked(update) {
-							checked = update;
-						},
-					};
-				}),
-			};
-		}),
-	}));
+	let initOpen = ($page.url.searchParams.get("open") ?? "").split(":");
+	let initSel = ($page.url.searchParams.get("selected") ?? "").split(":");
+
+	let events = /** @type {import("./$types").PageData["events"]} */ (
+		$page.data.events
+	).map((evt, i) => ({ ...evt, id: String(i) }));
+
+	let byDay = Map.groupBy(events, (item) => item.start.split("T")[0]);
+	/** @type {Record<string, Array<{ code: string, events: Array<Event & { id: string }> }>>} */
+	let byDayAndDisipline = {};
+	/** @type {Map<string, string>} */
+	let lookup = new Map();
+	for (let [day, items] of byDay) {
+		let grp = Object.groupBy(items, ({ discipline }) => {
+			lookup.set(discipline.code, discipline.description);
+			return discipline.code;
+		});
+		// @ts-expect-error - It thinks it's undefined
+		byDayAndDisipline[day] = Object.entries(grp).map(
+			([discipline, events]) => ({
+				code: discipline,
+				events,
+			}),
+		);
+	}
+
+	let days = Object.entries(byDayAndDisipline)
+		.toSorted(([a], [b]) => a.localeCompare(b))
+		.map(([date, disciplines]) => ({ date, disciplines }))
+		.map((day) => ({
+			date: day.date,
+			disciplines: day.disciplines.map((discipline) => {
+				let id = idForGroup({
+					date: day.date,
+					discipline,
+				});
+				let open = $state(initOpen.includes(id));
+				return {
+					code: discipline.code,
+					/** @type {boolean} */
+					get open() {
+						return open;
+					},
+					/** @param {boolean} update */
+					set open(update) {
+						open = update;
+					},
+					/** @type {Array<Event & { checked: boolean; id: string }>} */
+					events: discipline.events.map((evt) => {
+						let checked = $state(initSel.includes(evt.id));
+						return {
+							...evt,
+							/** @type {boolean} */
+							get checked() {
+								return checked;
+							},
+							/** @param {boolean} update */
+							set checked(update) {
+								checked = update;
+							},
+						};
+					}),
+				};
+			}),
+		}));
+
+	/** @param {{ date: string, discipline: { code: string } }} arg */
+	function idForGroup({ date, discipline }) {
+		let d = date.split("-").join("");
+		return `${d}${discipline.code}`;
+	}
 
 	/** @param {string} str */
 	function formatDate(str) {
@@ -45,13 +86,21 @@
 		});
 	}
 
+	function show() {
+		// @ts-expect-error
+		this.querySelector("svg").classList.add("visible");
+	}
+	function hide() {
+		// @ts-expect-error
+		this.querySelector("svg").classList.remove("visible");
+	}
+
 	let selected = $derived(
 		days.flatMap((day) => {
 			return day.disciplines.flatMap((discipline) => {
 				return discipline.events.filter((event) => event.checked);
 			});
-		})
-		.map((event) => event.id)
+		}),
 	);
 
 	$effect(() => {
@@ -64,6 +113,8 @@
 		}
 		goto(url, { noScroll: true });
 	});
+
+	let search = $state("");
 </script>
 
 <svelte:head>
@@ -71,32 +122,31 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<div class="flex justify-between items-end">
-	<div>
-		<h1 class="text-3xl font-bold">Paris 2024 Olympics</h1>
-		<p class="text-gray-600">Select the events you want to watch</p>
-	</div>
-
-	<div class="">
-		<button
-			class="cursor-pointer border-none"
-			onclick={() =>
-				days.forEach((day) => {
-					day.disciplines.forEach((discipline) => {
-						discipline.events.forEach((event) => {
-							event.checked = false;
-						});
-					});
-				})}>Reset</button
-		>
-		<span class="tabular-nums">
-			{selected.length.toLocaleString()}
-
-		</span>
-	</div>
-</div>
+<Rings />
 
 <div class="flex flex-col">
+	<div class="text-sm sticky top-0 z-20 text-gray-600">
+		{#if selected.length > 0}
+			<button
+				class="cursor-pointer border-none text-bold mr-2"
+				onclick={() =>
+					days.forEach((day) => {
+						day.disciplines.forEach((discipline) => {
+							discipline.events.forEach((event) => {
+								event.checked = false;
+							});
+						});
+					})}><b>Reset</b></button
+			>
+		{/if}
+		<span class="tabular-nums">
+			{#if selected.length > 0}
+				{selected.length.toLocaleString()} of
+			{/if}
+			{events.length.toLocaleString()} events
+		</span>
+	</div>
+
 	{#each days as day}
 		<div>
 			<h2
@@ -106,6 +156,7 @@
 			</h2>
 			<div class="flex flex-col">
 				{#each day.disciplines as d}
+					{@const hasMedal = d.events.some((e) => e.medal !== "")}
 					{@const n = d.events.reduce(
 						(acc, e) => (e.checked ? 1 : 0) + acc,
 						0,
@@ -118,30 +169,10 @@
 									return;
 								d.open = !d.open;
 							}}
-							onmouseover={function () {
-								// @ts-expect-error
-								this.querySelector("svg").classList.add(
-									"visible",
-								);
-							}}
-							onmouseout={function () {
-								// @ts-expect-error
-								this.querySelector("svg").classList.remove(
-									"visible",
-								);
-							}}
-							onfocus={function () {
-								// @ts-expect-error
-								this.querySelector("svg").classList.add(
-									"visible",
-								);
-							}}
-							onblur={function () {
-								// @ts-expect-error
-								this.querySelector("svg").classList.remove(
-									"visible",
-								);
-							}}
+							onmouseover={show}
+							onmouseout={hide}
+							onfocus={show}
+							onblur={hide}
 						>
 							<div class="flex items-center gap-4">
 								<div class="flex items-center gap-4">
@@ -151,35 +182,36 @@
 										src={`https://gstatic.olympics.com/s1/t_original/static/light/pictograms-paris-2024/olympics/${d.code}_small.svg`}
 									/>
 									<h3 class="text-lg font-bold">
-										{$page.data.lookup.get(d.code)}
+										{lookup.get(d.code)}
 									</h3>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke-width="2"
-										stroke="currentColor"
-										class="size-4 {d.open
-											? 'visible'
-											: 'invisible'}"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											d="m19.5 8.25-7.5 7.5-7.5-7.5"
-										/>
-									</svg>
 								</div>
 							</div>
-							<div class="flex">
+							<div class="flex items-center">
+								<svg
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="2"
+									stroke="currentColor"
+									class="size-4 mr-2 mt-0.5 {d.open
+										? 'visible'
+										: 'invisible'}"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="m19.5 8.25-7.5 7.5-7.5-7.5"
+									/>
+								</svg>
 								{#if n > 0}
 									<span class="text-sm mr-2 text-gray-600">
 										{n} of {d.events.length}
 									</span>
 								{/if}
-
+								{#if hasMedal}
+									<Medal />
+								{/if}
 								<input
-									class="accent-gray-800"
+									class="accent-gray-800 cursor-pointer"
 									checked={n > 0}
 									type="checkbox"
 									indeterminate={n > 0 && n < d.events.length}
