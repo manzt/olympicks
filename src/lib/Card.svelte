@@ -36,7 +36,7 @@
 	<div class="flex justify-between">
 		<div class="flex">
 			<span class="font-bold tabular-nums">{formatTime(event.start)}</span>
-			<div class="ml-4 text-gray-500">{event.description}</div>
+			<div class="ml-4 text-gray-500">{event.description.toLowerCase()}</div>
 		</div>
 
 		<div class="flex">

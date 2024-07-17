@@ -1,12 +1,11 @@
 <script>
-	import ics from "ics";
 	/** @typedef {import("./+page.server.js").Event} Event */
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import Rings from "$lib/Rings.svelte";
 	import Medal from "$lib/Medal.svelte";
 	import Card from "$lib/Card.svelte";
-    import { createIcsEntry } from "$lib/create-ics-entry.js";
+	import { createIcsEntry } from "$lib/create-ics-entry.js";
 
 	let initOpen = ($page.url.searchParams.get("open") ?? "").split(":");
 	let initSel = ($page.url.searchParams.get("selected") ?? "").split(":");
@@ -133,9 +132,12 @@
 		{#if selected.length > 0}
 			<button
 				class="cursor-pointer font-light text-gray-50 mr-2 rounded px-2 border border-gray-100 bg-gray-800"
+				title="Export selected events to .ics file"
 				onmousedown={async () => {
 					let contents = createIcsEntry(selected);
-					let file = new File([contents], "olympicks.ics", { type: "text/calendar" });
+					let file = new File([contents], "olympicks.ics", {
+						type: "text/calendar",
+					});
 					let url = URL.createObjectURL(file);
 					let a = document.createElement("a");
 					a.href = url;
@@ -146,6 +148,7 @@
 			>
 			<button
 				class="cursor-pointer border-none text-bold mr-2"
+				title="Reset all selections"
 				onmousedown={() =>
 					days.forEach((day) => {
 						day.disciplines.forEach((discipline) => {
@@ -169,7 +172,7 @@
 			<h2
 				class="text-xl flex items-center flex-end text-right sticky top-0 z-10 bg-white border-gray-600 border-b-1 h-10"
 			>
-				{formatDate(day.date)}
+				{formatDate(day.date).toLowerCase()}
 			</h2>
 			<div class="flex flex-col">
 				{#each day.disciplines as d}
@@ -199,7 +202,7 @@
 										src={`https://gstatic.olympics.com/s1/t_original/static/light/pictograms-paris-2024/olympics/${d.code}_small.svg`}
 									/>
 									<h3 class="text-lg font-bold">
-										{lookup.get(d.code)}
+										{lookup.get(d.code)?.toLowerCase()}
 									</h3>
 								</div>
 							</div>
