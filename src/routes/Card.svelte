@@ -25,10 +25,11 @@
 	}
 </script>
 
-<div
-	class="w-md p-2 mb-1 rounded-md border-1 {event.checked
+<button
+	class="w-md p-2 rounded-md cursor-pointer border-1 {event.checked
 		? 'border-gray-700'
 		: 'border-gray-200'}"
+	onclick={() => (event.checked = !event.checked)}
 >
 	<div class="flex">
 		<span class="font-bold tabular-nums">{formatTime(event.start)}</span>
@@ -36,7 +37,7 @@
 		<input
 			bind:checked={event.checked}
 			type="checkbox"
-			class="ml-auto accent-black"
+			class="ml-auto accent-gray-800 cursor-pointer"
 		/>
 	</div>
 	{#if isKnownMatch(event.match)}
@@ -66,4 +67,4 @@
 			</div>
 		</div>
 	{/if}
-</div>
+</button>
