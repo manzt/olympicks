@@ -23,18 +23,25 @@ export async function load() {
 	let json = JSON.parse(text)
 	let data = json.map(d => ({ ...d, checked: true }));
 	let byDay = Map.groupBy(data, (item) => item.start.split("T")[0])
-	/** @type {Map<string, Map<string, Array<SelectedEvent>>>} */
-	let byDayAndDisipline = new Map()
+	/** @type {Record<string, Array<{ code: string, events: Array<SelectedEvent> }>>} */
+	let byDayAndDisipline = {}
 	/** @type {Map<string, string>} */
 	let lookup = new Map();
 	for (let [day, items] of byDay) {
-		byDayAndDisipline.set(day, Map.groupBy(items, (item) => {
-			lookup.set(item.discipline.code, item.discipline.description);
-			return item.discipline.code;
-		}))
+		let grp = Object.groupBy(items, ({ discipline }) => {
+			lookup.set(discipline.code, discipline.description);
+			return discipline.code;
+		});
+		// @ts-expect-error - It thinks it's undefined
+		byDayAndDisipline[day] = Object
+			.entries(grp)
+			.map(([discipline, events]) => ({ code: discipline, events }));
 	}
 	return {
-		days: Array.from(byDayAndDisipline).toSorted(([a], [b]) => a.localeCompare(b)),
+		days: Object
+			.entries(byDayAndDisipline)
+			.toSorted(([a], [b]) => a.localeCompare(b))
+			.map(([date, disciplines]) => ({ date, disciplines })),
 		lookup,
 	}
 }

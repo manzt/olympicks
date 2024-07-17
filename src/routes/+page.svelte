@@ -4,6 +4,8 @@
 
 	/** @type {import("./$types").PageData["days"]} */
 	let days = $state($page.data.days);
+	/** @type {import("./$types").PageData["lookup"]} */
+	let lookup = $page.data.lookup;
 
 	/** @param {string} str */
 	function formatDate(str) {
@@ -12,7 +14,6 @@
 			day: "numeric",
 		});
 	}
-
 </script>
 
 <svelte:head>
@@ -21,22 +22,39 @@
 </svelte:head>
 
 <div class="flex flex-col">
-	{#each days as [day, disciplines]}
+	{#each days as day}
 		<div>
-			<h2 class="text-xl">{formatDate(day)}</h2>
+			<h2 class="text-xl">{formatDate(day.date)}</h2>
 			<div class="flex flex-col border-t-1 pt-6">
-				{#each disciplines.entries() as [code, events]}
-					<div class="flex justify-between">
+				{#each day.disciplines as d}
+					<div class="flex justify-between mb-10">
 						<div>
 							<div class="flex items-center gap-4">
-								<img class="w-8 h-8" alt={code} src={`https://gstatic.olympics.com/s1/t_original/static/light/pictograms-paris-2024/olympics/${code}_small.svg`} />
-								<h3 class="text-lg font-bold">{$page.data.lookup.get(code)}</h3>
+								<input
+									checked={!d.events.every(
+										(evt) => !evt.checked,
+									)}
+									type="checkbox"
+									onchange={() => {
+										const checked = d.events.every(
+											(evt) => !evt.checked,
+										);
+										d.events.forEach(
+											(event) =>
+												(event.checked = checked),
+										);
+									}}
+								/>
+								<img
+									class="w-8 h-8"
+									alt={d.code}
+									src={`https://gstatic.olympics.com/s1/t_original/static/light/pictograms-paris-2024/olympics/${d.code}_small.svg`}
+								/>
+								<h3 class="text-lg font-bold">{lookup.get(d.code)}</h3>
 							</div>
 						</div>
 						<div class="flex flex-col">
-							{#each events as event}
-								<Card {...event} />
-							{/each}
+							{#each d.events as event}<Card {event} />{/each}
 						</div>
 					</div>
 				{/each}
