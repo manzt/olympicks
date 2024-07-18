@@ -127,12 +127,12 @@
 
 <svelte:head>
 	<title>olympicks</title>
-	<meta name="description" content="Svelte demo app" />
+	<meta name="description" content="export 2024 summer olympic events to your calendar" />
 </svelte:head>
 
 <div class="comic-sans">
 	<h1 class="text-4xl text-center font-bold mb-2">olympicks</h1>
-	<p class="text-center text-gray-500 mb-2 text-balance">add 2024 summer olympic events to your calendar</p>
+	<p class="text-center text-gray-500 mb-2 text-balance">export 2024 summer olympic events to your calendar</p>
 </div>
 
 <br />
