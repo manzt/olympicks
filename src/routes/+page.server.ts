@@ -6,6 +6,8 @@ export const prerender = true;
 
 export async function load() {
 	let events = schema.eventSchema.array().parse(data);
+
+	// Let's just split the events by YYYY-MM-DD
 	let byMonthDay = Map.groupBy(events, (item) => item.start.split("T")[0]);
 
 	let byMonthDayAndDiscipline: Record<string, Array<EventGroupData>> = {};
@@ -26,18 +28,12 @@ export async function load() {
 	}
 
 	return {
+		events: events,
 		totalEvents: events.length,
 		sections: Object.entries(byMonthDayAndDiscipline)
 			.toSorted(([a], [b]) => a.localeCompare(b))
-			.map(([date, items]) => ({ name: stringifyMonthDay(date), items })),
+			.map(([date, items]) => ({ date, items })),
 	};
-}
-
-function stringifyMonthDay(str: string) {
-	return new Date(str).toLocaleDateString("en-US", {
-		month: "long",
-		day: "numeric",
-	});
 }
 
 /**

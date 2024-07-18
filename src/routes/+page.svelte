@@ -1,17 +1,62 @@
-<script>
+<script lang="ts">
 import { goto } from "$app/navigation";
 import { page } from "$app/stores";
 import { onMount } from "svelte";
+import type { PageData } from "./$types.ts";
 
 import Card from "$lib/components/Card.svelte";
 import Collapsible from "$lib/components/Collapsible.svelte";
 import Trigger from "$lib/components/Trigger.svelte";
 import { createIcsEntry } from "$lib/create-ics-entry.ts";
-import { Section } from "$lib/state.svelte.ts";
+import { groupBy } from "$lib/group-by.ts";
+import { Section, type EventGroupData } from "$lib/state.svelte.ts";
 
-/** @type {import("./$types").PageData["sections"]} */
-let raw = $page.data.sections;
-let sections = raw.map((sec) => new Section(sec.name, sec.items));
+let { events } = $page.data as PageData;
+
+// Let's just split the events by YYYY-MM-DD
+let byMonthDay = groupBy(events, (item) => stringifyMonthDay(item.start));
+let byMonthDayAndDiscipline: Record<string, Array<EventGroupData>> = {};
+
+for (let [monthDayString, items] of byMonthDay) {
+	// Group by discipline short name.
+	let grp = groupBy(items, ({ discipline }) => discipline.shortName);
+	byMonthDayAndDiscipline[monthDayString] = Array.from(grp.entries()).map(
+		([shortName, events]) => ({
+			// Just grab the label from the first event.
+			// We know there has to be at least one event
+			// in the group (for the grouping to exist).
+			label: { name: events[0].discipline.name, shortName: shortName },
+			events: events.toSorted((a, b) => {
+				/**
+				 * A custom sort function for events.
+				 *
+				 * 1.) Sort by start date.
+				 * 2.) If the start dates are the same, sort by description (i.e., the event name)
+				 */
+				let cmp = a.start.localeCompare(b.start);
+				return cmp === 0 ? a.description.localeCompare(b.description) : cmp;
+			}),
+			open: false,
+		}),
+	);
+}
+
+let sections = Object.entries(byMonthDayAndDiscipline)
+	.toSorted(([_a, a], [_b, b]) =>
+		a[0].events[0].start.localeCompare(b[0].events[0].start),
+	)
+	.map(
+		([_, items]) =>
+			new Section(stringifyMonthDay(items[0].events[0].start), items),
+	);
+
+// We want to do this on the client to have the user's timezone
+function stringifyMonthDay(isoDateString: string) {
+	return new Date(isoDateString).toLocaleDateString("en-US", {
+		month: "long",
+		day: "numeric",
+	});
+}
 
 onMount(() => {
 	let initSel = ($page.url.searchParams.get("selected") ?? "").split(" ");
@@ -23,11 +68,6 @@ onMount(() => {
 		}
 	}
 });
-
-// just get a nice reference to the selected events
-let events = sections.flatMap((sec) =>
-	sec.items.flatMap((item) => item.events),
-);
 
 let selected = $derived(events.filter((event) => event.checked));
 
