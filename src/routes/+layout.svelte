@@ -1,10 +1,13 @@
-<script>
+<script lang="ts">
+import type { Snippet } from "svelte";
 import "../app.css";
+
+let { children }: { children: Snippet } = $props();
 </script>
 
 <div class="flex flex-col min-h-screen">
 	<main class="flex-1 flex flex-col p-4 w-full max-w-4xl mx-auto box-border">
-		<slot />
+		{@render children()}
 	</main>
 
 	<footer

@@ -12,8 +12,6 @@ import { groupBy } from "$lib/group-by.ts";
 import { EventGroup, SelectableEvent } from "$lib/state.svelte.ts";
 
 let events = ($page.data as PageData).events.map((e) => new SelectableEvent(e));
-
-// Let's just split the events by YYYY-MM-DD
 let byMonthDay = groupBy(events, (item) => stringifyMonthDay(item.start));
 let byMonthDayAndDiscipline: Record<string, Array<EventGroup>> = {};
 
@@ -41,6 +39,7 @@ for (let [monthDayString, items] of byMonthDay) {
 	);
 }
 
+/** Sort by the children events start data. It's ok to index because we know there is at least one event */
 let sections = Object.entries(byMonthDayAndDiscipline)
 	.toSorted(([_a, a], [_b, b]) =>
 		a[0].events[0].start.localeCompare(b[0].events[0].start),
@@ -59,20 +58,20 @@ function stringifyMonthDay(isoDateString: string) {
 }
 
 onMount(() => {
-	let initSel = ($page.url.searchParams.get("selected") ?? "").split(" ");
-	for (let sec of sections) {
-		for (let item of sec.items) {
-			for (let event of item.events) {
-				event.checked = initSel.includes(event.id);
-			}
+	let url = new URL($page.url);
+	let selected = url.searchParams.get("selected") ?? "";
+	let ids = selected.split(" ");
+	for (let event of events) {
+		if (ids.includes(event.id)) {
+			event.checked = true;
 		}
 	}
 });
 
-let selected = $derived(events.filter((event) => event.checked));
+let checked = $derived(events.filter((e) => e.checked));
 
 $effect(() => {
-	let ids = selected.map((event) => event.id);
+	let ids = checked.map((e) => e.id);
 	let url = new URL($page.url);
 	url.searchParams.delete("selected");
 	if (ids.length > 0) {
@@ -90,6 +89,17 @@ $effect(() => {
 	/>
 </svelte:head>
 
+<svelte:window on:popstate={(evt) => {
+	evt.preventDefault();
+	if (!evt.state.ids) return;
+	for (let event of events) {
+		event.checked = false;
+		if (evt.state.ids.includes(event.id)) {
+			event.checked = true;
+		}
+	}
+}} />
+
 <div class="comic-sans">
 	<h1 class="text-4xl text-center font-bold mb-2">olympicks</h1>
 	<p class="text-center text-gray-500 mb-2 text-balance">
@@ -103,12 +113,12 @@ $effect(() => {
 	<div
 		class="text-sm top-5 sticky z-20 text-gray-600 bg-white bg-opacity-30 self-end h-5"
 	>
-		{#if selected.length > 0}
+		{#if checked.length > 0}
 			<button
 				class="cursor-pointer font-light text-gray-50 mr-2 rounded px-2 border border-gray-100 bg-gray-800"
 				title="Export selected events to .ics file"
 				onmousedown={async () => {
-					let contents = createIcsEntry(selected);
+					let contents = createIcsEntry(checked);
 					let file = new File([contents], "olympicks.ics", {
 						type: "text/calendar",
 					});
@@ -128,10 +138,10 @@ $effect(() => {
 			>
 		{/if}
 		<span class="tabular-nums">
-			{#if selected.length > 0}
-				{selected.length.toLocaleString()} of
+			{#if checked.length > 0}
+				{checked.length.toLocaleString()} of
 			{/if}
-			{$page.data.totalEvents.toLocaleString()} events
+			{events.length.toLocaleString()} events
 		</span>
 	</div>
 

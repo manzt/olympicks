@@ -32,7 +32,7 @@ function hide() {
 		{@render trigger()}
 	</button>
 	{#if open}
-		<div transition:slide>
+		<div transition:slide={{ duration: 300 }}>
 			{@render content()}
 		</div>
 	{/if}

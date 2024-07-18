@@ -5,4 +5,5 @@ import { defineConfig } from "vite";
 export default defineConfig({
 	plugins: [sveltekit(), tailwindcss()],
 	css: { transformer: "lightningcss" },
+	server: { hmr: false },
 });
