@@ -28,7 +28,7 @@
 </script>
 
 <button
-	class="w-full p-2 rounded-md cursor-pointer border-1 {event.checked
+	class="w-full md:w-md p-2 rounded-md cursor-pointer border-1 {event.checked
 		? 'border-gray-700'
 		: 'border-gray-200'}"
 	onclick={() => (event.checked = !event.checked)}
@@ -39,7 +39,7 @@
 				>{formatTime(event.start)}</span
 			>
 			<div
-				class="ml-4 text-gray-500 flex-1 text-balance text-left"
+				class="ml-4 text-gray-500 flex-1 kext-balance text-left"
 			>
 				{event.description.toLowerCase()}
 			</div>

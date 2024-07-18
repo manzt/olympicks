@@ -206,7 +206,7 @@
 					)}
 					<div class="flex flex-col border-gray-200 border-b">
 						<button
-							class="sticky top-10 flex justify-between items-center p-2 w-full cursor-pointer bg-gradient-to-b from-white to-transparent"
+							class="sticky top-10 flex justify-between items-center p-2 w-full cursor-pointer bg-gradient-to-b from-white from-80% to-100% to-transparent"
 							onclick={function (evt) {
 								if (evt.target instanceof HTMLInputElement)
 									return;
