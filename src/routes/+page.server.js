@@ -1,4 +1,4 @@
-/** @import { type EventGroupData } from "$lib/Section.svelte.js" */
+/** @import { type EventGroupData } from "$lib/state.svelte.js" */
 import data from "../../static/data.json";
 import * as schema from "$lib/schema.js";
 

@@ -1,7 +1,5 @@
-// @ts-check
+/** @import * as schema from "./schema.js" */
 import * as ics from "ics";
-
-/** @typedef {import('../routes/+page.server.js').Event} Event */
 
 /**
  * @param {string} isoString
@@ -18,18 +16,21 @@ function convertToIcsDate(isoString) {
   ];
 }
 
-/** @param {Array<Event>} group */
-function mergeNonMatchEventGroup(group) {
+/**
+ * @param {Array<schema.Event>} events
+ * @returns {Array<{ title: string, description: string, start: string, end: string }>}
+ */
+function mergeNonMatchEventGroup(events) {
   // Sort by start time
-  group.sort((a, b) => a.start.localeCompare(b.start));
+  events.sort((a, b) => a.start.localeCompare(b.start));
 
-  /** @type {Array<Omit<Event, "description"> & { description: Array<string> }>} */
+  /** @type {Array<Omit<schema.Event, "description"> & { description: Array<string> }>} */
   let merged = [];
 
-  /** @type {Omit<Event, "description"> & { description: Array<string> } | null} */
+  /** @type {Omit<schema.Event, "description"> & { description: Array<string> } | null} */
   let current = null;
 
-  for (let event of group) {
+  for (let event of events) {
     if (!current) {
       current = { ...event, description: [event.description] };
     } else {
@@ -51,27 +52,13 @@ function mergeNonMatchEventGroup(group) {
     merged.push(current);
   }
   return merged.map((e) => ({
-    title: `olympicks: ${e.discipline.description}${formatMedalEvent(e.medal)}`,
+    title: formatTitle(e),
     start: e.start,
     end: e.end,
     description: e.description.join("; "),
   }));
 }
 
-/**
- * @param {{ team1: { code: string, description: string }, team2: { code: string, description: string } } | {} | undefined} match
- */
-function formatMatchEntry(match) {
-  if (match && "team1" in match) {
-    return ` - ${match.team1.description} vs ${match.team2.description}`;
-  }
-  return "";
-}
-
-/** @param {Event["medal"]} medal */
-function formatMedalEvent(medal) {
-  return `${medal ? " (medal event)" : ""}`;
-}
 
 /**
  * Combines events that are not matches into a single calendar event if they overlap.
@@ -85,7 +72,7 @@ function combineEntries(events) {
   let nonMatches = events.filter((event) => !event.match);
   let groups = Map.groupBy(
     nonMatches,
-    ({ discipline, start }) => `${start.split("T")[0]}${discipline.code}`,
+    ({ discipline, start }) => `${start.split("T")[0]}${discipline.shortName}`,
   );
   let merged = Array
     .from(groups.values())
@@ -93,9 +80,7 @@ function combineEntries(events) {
   let matches = events
     .filter((e) => e.match)
     .map((e) => ({
-      title: `olympicks: ${e.discipline.description}${
-        formatMatchEntry(e.match)
-      }${formatMedalEvent(e.medal)}`,
+      title: formatTitle(e),
       start: e.start,
       end: e.end,
       description: `${e.description}${formatMatchEntry(e.match)}`,
@@ -126,4 +111,29 @@ export function createIcsEntry(events) {
   }
   // @ts-expect-error ics typings are wrong
   return result.value;
+}
+
+/**
+ * @param {Pick<schema.Event, "match"| "discipline" | "medal">} event
+ */
+function formatTitle(event, prefix = "olympicks: ") {
+  let title = event.discipline.name;
+  let maybeMatch = formatMatchEntry(event.match);
+  let maybeMedal = formatMedalEvent(event.medal);
+  return `${prefix}${title}${maybeMatch}${maybeMedal}`;
+}
+
+/**
+ * @param {schema.Event["match"]} match
+ */
+function formatMatchEntry(match) {
+  if (match.kind === "known") {
+    return ` - ${match.team1.name} vs ${match.team2.name}`;
+  }
+  return "";
+}
+
+/** @param {schema.Event["medal"]} medal */
+function formatMedalEvent(medal) {
+  return `${medal ? " (medal event)" : ""}`;
 }

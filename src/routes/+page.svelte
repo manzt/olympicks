@@ -3,7 +3,7 @@
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 
-	import { Section } from "$lib/Section.svelte.js";
+	import { Section } from "$lib/state.svelte.js";
 	import EventGroup from "$lib/EventGroup.svelte";
 	import { createIcsEntry } from "$lib/create-ics-entry.js";
 

@@ -16,7 +16,7 @@ export class AssertionError extends Error {
  * @param {string} [msg] The message to display if the assertion fails.
  * @returns {asserts expr}
  */
-export function assert(expr, msg) {
+export function assert(expr, msg = "") {
 	if (!expr) {
 		throw new AssertionError(msg);
 	}

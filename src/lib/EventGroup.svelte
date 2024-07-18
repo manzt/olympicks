@@ -3,7 +3,7 @@
 	import Medal from "./Medal.svelte";
 	import Card from "./Card.svelte";
 
-	/** @type {{ item: import("./Section.svelte.js").EventGroup }} */
+	/** @type {{ item: import("./state.svelte.js").EventGroup }} */
 	let { item } = $props();
 	let hasMedal = item.events.some((e) => e.medal !== "");
 	let n = $derived(

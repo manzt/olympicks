@@ -1,6 +1,6 @@
 <script>
 	import Medal from "./Medal.svelte";
-	/** @type {{ event: import("$lib/Section.js").SelectableEvent }} */
+	/** @type {{ event: import("$lib/state.svelte.js").SelectableEvent }} */
 	let { event } = $props();
 
 	/** @typedef {{ name: string, shortName: string }} Team */

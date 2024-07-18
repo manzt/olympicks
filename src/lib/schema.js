@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { idForEvent } from "./id-for-event.js";
 
 /** @typedef {z.infer<typeof eventSchema>} Event */
 /** @typedef {z.infer<typeof labelSchema>} Label */
@@ -19,14 +18,12 @@ const matchSchema = z.union([
 	z.object({
 		team1: labelSchema,
 		team2: labelSchema,
-	}),
+	}).transform(d => ({ ...d, kind: /** @type {const} */ ("known") })),
 	// unknown (tbd)
-	z.object({}),
+	z.object({}).transform(() => ({ kind: /** @type {const} */ ("unknown") })),
 	// not applicable
-	z.undefined(),
-]).transform(
-	d => d === undefined ? null : d,
-)
+	z.undefined().transform(() => ({ kind: /** @type {const} */ ("none") })),
+]);
 
 /** Represents an olympic event */
 export const eventSchema = z.object({
@@ -38,6 +35,5 @@ export const eventSchema = z.object({
 	discipline: labelSchema,
 	match: matchSchema,
 	venue: labelSchema.optional().transform(v => v ? v : null),
-}).transform(
-	(d) => ({ ...d, id: idForEvent(d) }),
-);
+	id: z.string(),
+});
