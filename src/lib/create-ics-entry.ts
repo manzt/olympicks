@@ -1,5 +1,7 @@
 import * as ics from "ics";
+
 import { assert } from "./assert.ts";
+import { groupBy } from "./group-by.ts";
 import type * as schema from "./schema.ts";
 
 /**
@@ -71,7 +73,7 @@ function combineEntries(
 	// Let's group non-matches together such that they end up as a single calendar
 	// event if they overlap.
 	let nonMatches = events.filter((event) => !event.match);
-	let groups = Map.groupBy(
+	let groups = groupBy(
 		nonMatches,
 		({ discipline, start }) => `${start.split("T")[0]}${discipline.shortName}`,
 	);
