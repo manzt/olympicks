@@ -1,8 +1,10 @@
 <script>
 	/** @typedef {import("./+page.server.js").Event} Event */
 	import { onMount } from "svelte";
+	import { slide } from "svelte/transition"
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
+
 
 	import Medal from "$lib/Medal.svelte";
 	import Card from "$lib/Card.svelte";
@@ -260,6 +262,7 @@
 						</button>
 						{#if d.open}
 							<div
+								transition:slide
 								class="flex flex-col items-end gap-1 last:pb-2"
 							>
 								{#each d.events as event}

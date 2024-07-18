@@ -52,7 +52,7 @@
 			<input
 				bind:checked={event.checked}
 				type="checkbox"
-				class="accent-gray-600 cursor-pointer"
+				class="accent-gray-800 cursor-pointer"
 			/>
 		</div>
 	</div>
