@@ -6,8 +6,8 @@ import { onMount } from "svelte";
 import Card from "$lib/components/Card.svelte";
 import Collapsible from "$lib/components/Collapsible.svelte";
 import Trigger from "$lib/components/Trigger.svelte";
-import { createIcsEntry } from "$lib/create-ics-entry.js";
-import { Section } from "$lib/state.svelte.js";
+import { createIcsEntry } from "$lib/create-ics-entry.ts";
+import { Section } from "$lib/state.svelte.ts";
 
 /** @type {import("./$types").PageData["sections"]} */
 let raw = $page.data.sections;
