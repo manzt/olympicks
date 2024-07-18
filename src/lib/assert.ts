@@ -2,8 +2,8 @@
  * Error thrown when an assertion fails.
  */
 export class AssertionError extends Error {
-	/** @param {string} message The error message. */
-	constructor(message) {
+	/** @param message The error message. */
+	constructor(message: string) {
 		super(message);
 		this.name = "AssertionError";
 	}
@@ -12,11 +12,11 @@ export class AssertionError extends Error {
 /**
  * Make an assertion. An error is thrown if `expr` does not have truthy value.
  *
- * @param {unknown} expr The expression to test.
- * @param {string} [msg] The message to display if the assertion fails.
- * @returns {asserts expr}
+ * @param expr The expression to test.
+ * @param msg The message to display if the assertion fails.
+ * @returns
  */
-export function assert(expr, msg = "") {
+export function assert(expr: unknown, msg = ""): asserts expr {
 	if (!expr) {
 		throw new AssertionError(msg);
 	}

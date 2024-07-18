@@ -1,5 +1,5 @@
-import * as schema from "$lib/schema.js";
-/** @import { type EventGroupData } from "$lib/state.svelte.js" */
+import * as schema from "$lib/schema.ts";
+import type { EventGroupData } from "$lib/state.svelte.ts";
 import data from "../../static/data.json";
 
 export const prerender = true;
@@ -8,8 +8,7 @@ export async function load() {
 	let events = schema.eventSchema.array().parse(data);
 	let byMonthDay = Map.groupBy(events, (item) => item.start.split("T")[0]);
 
-	/** @type {Record<string, Array<EventGroupData>>} */
-	let byMonthDayAndDiscipline = {};
+	let byMonthDayAndDiscipline: Record<string, Array<EventGroupData>> = {};
 
 	for (let [monthDayString, items] of byMonthDay) {
 		// Group by discipline short name.
@@ -34,8 +33,7 @@ export async function load() {
 	};
 }
 
-/** @param {string} str */
-function stringifyMonthDay(str) {
+function stringifyMonthDay(str: string) {
 	return new Date(str).toLocaleDateString("en-US", {
 		month: "long",
 		day: "numeric",
@@ -47,12 +45,8 @@ function stringifyMonthDay(str) {
  *
  * 1.) Sort by start date.
  * 2.) If the start dates are the same, sort by description (i.e., the event name)
- *
- * @param {schema.Event} a
- * @param {schema.Event} b
- * @returns {number}
  */
-function sortEvents(a, b) {
+function sortEvents(a: schema.Event, b: schema.Event): number {
 	let cmp = a.start.localeCompare(b.start);
 	return cmp === 0 ? a.description.localeCompare(b.description) : cmp;
 }

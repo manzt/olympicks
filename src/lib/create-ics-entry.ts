@@ -1,11 +1,14 @@
-/** @import * as schema from "./schema.js" */
 import * as ics from "ics";
+import { assert } from "./assert.ts";
+import type * as schema from "./schema.ts";
 
 /**
- * @param {string} isoString
- * @returns {[number, number, number, number, number]}
+ * @param isoString ISO 8601 date string
+ * @returns [year, month, day, hour, minute]
  */
-function convertToIcsDate(isoString) {
+function convertToIcsDate(
+	isoString: string,
+): [number, number, number, number, number] {
 	let date = new Date(isoString);
 	return [
 		date.getUTCFullYear(),
@@ -16,19 +19,19 @@ function convertToIcsDate(isoString) {
 	];
 }
 
-/**
- * @param {Array<schema.Event>} events
- * @returns {Array<{ title: string, description: string, start: string, end: string }>}
- */
-function mergeNonMatchEventGroup(events) {
+function mergeNonMatchEventGroup(
+	events: Array<schema.Event>,
+): Array<{ title: string; description: string; start: string; end: string }> {
 	// Sort by start time
 	events.sort((a, b) => a.start.localeCompare(b.start));
 
-	/** @type {Array<Omit<schema.Event, "description"> & { description: Array<string> }>} */
-	let merged = [];
+	let merged: Array<
+		Omit<schema.Event, "description"> & { description: Array<string> }
+	> = [];
 
-	/** @type {Omit<schema.Event, "description"> & { description: Array<string> } | null} */
-	let current = null;
+	let current:
+		| (Omit<schema.Event, "description"> & { description: Array<string> })
+		| null = null;
 
 	for (let event of events) {
 		if (!current) {
@@ -61,11 +64,10 @@ function mergeNonMatchEventGroup(events) {
 
 /**
  * Combines events that are not matches into a single calendar event if they overlap.
- *
- * @param {Array<schema.Event>} events
- * @returns {Array<{ title: string, description: string, start: string, end: string }>}
  */
-function combineEntries(events) {
+function combineEntries(
+	events: Array<schema.Event>,
+): Array<{ title: string; description: string; start: string; end: string }> {
 	// Let's group non-matches together such that they end up as a single calendar
 	// event if they overlap.
 	let nonMatches = events.filter((event) => !event.match);
@@ -88,11 +90,7 @@ function combineEntries(events) {
 	return [...merged.flat(), ...matches];
 }
 
-/**
- * @param {Array<schema.Event>} events
- * @returns {string}
- */
-export function createIcsEntry(events) {
+export function createIcsEntry(events: Array<schema.Event>): string {
 	let result = ics.createEvents(
 		combineEntries(events).map((event) => ({
 			title: event.title,
@@ -108,31 +106,27 @@ export function createIcsEntry(events) {
 	if (result.error) {
 		throw result.error;
 	}
-	// @ts-expect-error ics typings are wrong
+	assert(result.value, "Expected a value");
 	return result.value;
 }
 
-/**
- * @param {Pick<schema.Event, "match"| "discipline" | "medal">} event
- */
-function formatTitle(event, prefix = "olympicks: ") {
+function formatTitle(
+	event: Pick<schema.Event, "match" | "discipline" | "medal">,
+	prefix = "olympicks: ",
+) {
 	let title = event.discipline.name;
 	let maybeMatch = formatMatchEntry(event.match);
 	let maybeMedal = formatMedalEvent(event.medal);
 	return `${prefix}${title}${maybeMatch}${maybeMedal}`;
 }
 
-/**
- * @param {schema.Event["match"]} match
- */
-function formatMatchEntry(match) {
+function formatMatchEntry(match: schema.Event["match"]) {
 	if (match.kind === "known") {
 		return ` - ${match.team1.name} vs ${match.team2.name}`;
 	}
 	return "";
 }
 
-/** @param {schema.Event["medal"]} medal */
-function formatMedalEvent(medal) {
+function formatMedalEvent(medal: schema.Event["medal"]): string {
 	return `${medal ? " (medal event)" : ""}`;
 }

@@ -1,18 +1,11 @@
-<script>
+<script lang="ts">
 import Medal from "$lib/components/Medal.svelte";
-/** @type {{ event: import("$lib/state.svelte.js").SelectableEvent }} */
-let { event } = $props();
+import type { Label } from "$lib/schema.ts";
+import type { SelectableEvent } from "$lib/state.svelte.ts";
 
-/** @typedef {{ name: string, shortName: string }} Team */
-/**
- * @param {any} x
- * @returns {x is { team1: Team, team2: Team }} */
-function isKnownMatch(x) {
-	return typeof x === "object" && "team1" in x;
-}
+let { event }: { event: SelectableEvent } = $props();
 
-/** @param {string} str */
-function formatTime(str) {
+function formatTime(str: string): string {
 	return new Date(str).toLocaleTimeString("en-US", {
 		hour: "numeric",
 		minute: "numeric",
@@ -20,8 +13,7 @@ function formatTime(str) {
 	});
 }
 
-/** @param {Team} team */
-function getFlagUrl(team) {
+function getFlagUrl(team: Label) {
 	let code = team.shortName;
 	return `https://gstatic.olympics.com/s1/f_auto/static/light/flag/paris-2024/olympic/3x2/${code}.svg`;
 }
@@ -53,7 +45,7 @@ function getFlagUrl(team) {
 			/>
 		</div>
 	</div>
-	{#if isKnownMatch(event.match)}
+	{#if event.match.kind === "known"}
 		<div
 			class="text-sm text-gray-500 w-full flex justify-center items-center mt-2 h-10"
 		>

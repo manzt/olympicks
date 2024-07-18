@@ -1,7 +1,11 @@
-<script>
+<script lang="ts">
+import type { Snippet } from "svelte";
 import { slide } from "svelte/transition";
-/** @type {{ open: boolean, trigger: import("svelte").Snippet; content: import("svelte").Snippet }} */
-let { open = $bindable(), trigger, content } = $props();
+let {
+	open = $bindable(),
+	trigger,
+	content,
+}: { open: boolean; trigger: Snippet; content: Snippet } = $props();
 
 function show() {
 	// @ts-expect-error

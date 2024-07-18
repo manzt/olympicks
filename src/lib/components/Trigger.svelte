@@ -1,8 +1,8 @@
-<script>
+<script lang="ts">
 import Medal from "$lib/components/Medal.svelte";
+import type { EventGroup } from "$lib/state.svelte.ts";
 
-/** @type {{ item: import("$lib/state.svelte.js").EventGroup }} */
-let { item } = $props();
+let { item }: { item: EventGroup } = $props();
 let hasMedal = item.events.some((e) => e.medal !== "");
 let n = $derived(item.events.reduce((acc, e) => (e.checked ? 1 : 0) + acc, 0));
 </script>

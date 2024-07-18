@@ -1,7 +1,8 @@
 import { z } from "zod";
 
-/** @typedef {z.infer<typeof eventSchema>} Event */
-/** @typedef {z.infer<typeof labelSchema>} Label */
+export type Event = z.infer<typeof eventSchema>;
+export type Label = z.infer<typeof labelSchema>;
+export type Match = z.infer<typeof matchSchema>;
 
 /** Represents a named entity */
 const labelSchema = z
@@ -22,15 +23,15 @@ const matchSchema = z.union([
 			team1: labelSchema,
 			team2: labelSchema,
 		})
-		.transform((d) => ({ ...d, kind: /** @type {const} */ ("known") })),
+		.transform((d) => ({ ...d, kind: "known" }) as const),
 	// unknown (tbd)
 	z
 		.object({})
-		.transform(() => ({ kind: /** @type {const} */ ("unknown") })),
+		.transform(() => ({ kind: "unknown" }) as const),
 	// not applicable
 	z
 		.undefined()
-		.transform(() => ({ kind: /** @type {const} */ ("none") })),
+		.transform(() => ({ kind: "none" }) as const),
 ]);
 
 /** Represents an olympic event */
