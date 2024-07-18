@@ -4,25 +4,33 @@ import { z } from "zod";
 /** @typedef {z.infer<typeof labelSchema>} Label */
 
 /** Represents a named entity */
-const labelSchema = z.object({
-	code: z.string(),
-	description: z.string(),
-}).transform((d) => ({
-	name: d.description,
-	shortName: d.code,
-}));
+const labelSchema = z
+	.object({
+		code: z.string(),
+		description: z.string(),
+	})
+	.transform((d) => ({
+		name: d.description,
+		shortName: d.code,
+	}));
 
 /** Represents a match */
 const matchSchema = z.union([
 	// known: team vs team
-	z.object({
-		team1: labelSchema,
-		team2: labelSchema,
-	}).transform(d => ({ ...d, kind: /** @type {const} */ ("known") })),
+	z
+		.object({
+			team1: labelSchema,
+			team2: labelSchema,
+		})
+		.transform((d) => ({ ...d, kind: /** @type {const} */ ("known") })),
 	// unknown (tbd)
-	z.object({}).transform(() => ({ kind: /** @type {const} */ ("unknown") })),
+	z
+		.object({})
+		.transform(() => ({ kind: /** @type {const} */ ("unknown") })),
 	// not applicable
-	z.undefined().transform(() => ({ kind: /** @type {const} */ ("none") })),
+	z
+		.undefined()
+		.transform(() => ({ kind: /** @type {const} */ ("none") })),
 ]);
 
 /** Represents an olympic event */
@@ -34,6 +42,6 @@ export const eventSchema = z.object({
 	medal: z.enum(["", "1", "2", "3"]),
 	discipline: labelSchema,
 	match: matchSchema,
-	venue: labelSchema.optional().transform(v => v ? v : null),
+	venue: labelSchema.optional().transform((v) => (v ? v : null)),
 	id: z.string(),
 });

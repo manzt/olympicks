@@ -1,12 +1,10 @@
 <script>
-	import Medal from "$lib/components/Medal.svelte";
+import Medal from "$lib/components/Medal.svelte";
 
-	/** @type {{ item: import("$lib/state.svelte.js").EventGroup }} */
-	let { item } = $props();
-	let hasMedal = item.events.some((e) => e.medal !== "");
-	let n = $derived(
-		item.events.reduce((acc, e) => (e.checked ? 1 : 0) + acc, 0),
-	);
+/** @type {{ item: import("$lib/state.svelte.js").EventGroup }} */
+let { item } = $props();
+let hasMedal = item.events.some((e) => e.medal !== "");
+let n = $derived(item.events.reduce((acc, e) => (e.checked ? 1 : 0) + acc, 0));
 </script>
 
 <div class="flex items-center gap-4">

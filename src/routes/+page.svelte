@@ -1,45 +1,45 @@
 <script>
-	import { onMount } from "svelte";
-	import { goto } from "$app/navigation";
-	import { page } from "$app/stores";
+import { goto } from "$app/navigation";
+import { page } from "$app/stores";
+import { onMount } from "svelte";
 
-	import { Section } from "$lib/state.svelte.js";
-	import { createIcsEntry } from "$lib/create-ics-entry.js";
-	import Collapsible from "$lib/components/Collapsible.svelte";
-	import Card from "$lib/components/Card.svelte";
-    import Trigger from "$lib/components/Trigger.svelte";
+import Card from "$lib/components/Card.svelte";
+import Collapsible from "$lib/components/Collapsible.svelte";
+import Trigger from "$lib/components/Trigger.svelte";
+import { createIcsEntry } from "$lib/create-ics-entry.js";
+import { Section } from "$lib/state.svelte.js";
 
-	/** @type {import("./$types").PageData["sections"]} */
-	let raw = $page.data.sections;
-	let sections = raw.map((sec) => new Section(sec.name, sec.items));
+/** @type {import("./$types").PageData["sections"]} */
+let raw = $page.data.sections;
+let sections = raw.map((sec) => new Section(sec.name, sec.items));
 
-	onMount(() => {
-		let initSel = ($page.url.searchParams.get("selected") ?? "").split(" ");
-		for (let sec of sections) {
-			for (let item of sec.items) {
-				for (let event of item.events) {
-					event.checked = initSel.includes(event.id);
-				}
+onMount(() => {
+	let initSel = ($page.url.searchParams.get("selected") ?? "").split(" ");
+	for (let sec of sections) {
+		for (let item of sec.items) {
+			for (let event of item.events) {
+				event.checked = initSel.includes(event.id);
 			}
 		}
-	});
+	}
+});
 
-	// just get a nice reference to the selected events
-	let events = sections.flatMap((sec) =>
-		sec.items.flatMap((item) => item.events),
-	);
+// just get a nice reference to the selected events
+let events = sections.flatMap((sec) =>
+	sec.items.flatMap((item) => item.events),
+);
 
-	let selected = $derived(events.filter((event) => event.checked));
+let selected = $derived(events.filter((event) => event.checked));
 
-	$effect(() => {
-		let ids = selected.map((event) => event.id);
-		let url = new URL($page.url);
-		url.searchParams.delete("selected");
-		if (ids.length > 0) {
-			url.searchParams.append("selected", ids.join(" "));
-		}
-		goto(url.href, { noScroll: true });
-	});
+$effect(() => {
+	let ids = selected.map((event) => event.id);
+	let url = new URL($page.url);
+	url.searchParams.delete("selected");
+	if (ids.length > 0) {
+		url.searchParams.append("selected", ids.join(" "));
+	}
+	goto(url.href, { noScroll: true });
+});
 </script>
 
 <svelte:head>

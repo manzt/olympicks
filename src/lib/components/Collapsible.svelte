@@ -1,16 +1,16 @@
 <script>
-	import { slide } from "svelte/transition";
-	/** @type {{ open: boolean, trigger: import("svelte").Snippet; content: import("svelte").Snippet }} */
-	let { open = $bindable(), trigger, content } = $props();
+import { slide } from "svelte/transition";
+/** @type {{ open: boolean, trigger: import("svelte").Snippet; content: import("svelte").Snippet }} */
+let { open = $bindable(), trigger, content } = $props();
 
-	function show() {
-		// @ts-expect-error
-		this.querySelector("svg").classList.add("visible");
-	}
-	function hide() {
-		// @ts-expect-error
-		this.querySelector("svg").classList.remove("visible");
-	}
+function show() {
+	// @ts-expect-error
+	this.querySelector("svg").classList.add("visible");
+}
+function hide() {
+	// @ts-expect-error
+	this.querySelector("svg").classList.remove("visible");
+}
 </script>
 
 <div class="flex flex-col border-gray-200 border-b">
