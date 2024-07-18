@@ -15,7 +15,7 @@ function convertToIcsDate(
 	return [
 		date.getUTCFullYear(),
 		date.getUTCMonth() + 1, // getMonth() returns 0-11
-		date.getUTCDate() - 1,
+		date.getUTCDate(),
 		date.getUTCHours(),
 		date.getUTCMinutes(),
 	];
