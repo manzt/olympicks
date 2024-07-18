@@ -1,5 +1,5 @@
 <script>
-    import Medal from "./Medal.svelte";
+	import Medal from "./Medal.svelte";
 
 	/** @type {{ event: import("../routes/+page.server.js").Event & { checked:  boolean }}} */
 	let { event } = $props();
@@ -28,15 +28,21 @@
 </script>
 
 <button
-	class="w-md p-2 rounded-md cursor-pointer border-1 {event.checked
+	class="w-full p-2 rounded-md cursor-pointer border-1 {event.checked
 		? 'border-gray-700'
 		: 'border-gray-200'}"
 	onclick={() => (event.checked = !event.checked)}
 >
 	<div class="flex justify-between">
-		<div class="flex">
-			<span class="font-bold tabular-nums">{formatTime(event.start)}</span>
-			<div class="ml-4 text-gray-500">{event.description.toLowerCase()}</div>
+		<div class="flex text-ellipsis flex-1 overflow-hidden">
+			<span class="font-bold tabular-nums"
+				>{formatTime(event.start)}</span
+			>
+			<div
+				class="ml-4 text-gray-500 flex-1 text-balance text-left"
+			>
+				{event.description.toLowerCase()}
+			</div>
 		</div>
 
 		<div class="flex">
