@@ -1,3 +1,4 @@
+import data from "../../static/data.json";
 export const prerender = true;
 
 /**
@@ -11,8 +12,5 @@ export const prerender = true;
  */
 
 export async function load() {
-	let response = await fetch(new URL("data.json", import.meta.url))
-	let text = await response.text();
-	let events = /** @type {Array<Event>} */(JSON.parse(text));
-	return { events }
+	return { events: data }
 }

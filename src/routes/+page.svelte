@@ -6,10 +6,9 @@
 	import Medal from "$lib/Medal.svelte";
 	import Card from "$lib/Card.svelte";
 	import { createIcsEntry } from "$lib/create-ics-entry.js";
+	import { onMount } from "svelte";
 
-	let initOpen = ($page.url.searchParams.get("open") ?? "").split(":");
-	let initSel = ($page.url.searchParams.get("selected") ?? "").split(":");
-
+	let sep = "+";
 	let events = /** @type {import("./$types").PageData["events"]} */ (
 		$page.data.events
 	).map((evt, i) => ({ ...evt, id: String(i) }));
@@ -28,7 +27,12 @@
 		byDayAndDisipline[day] = Object.entries(grp).map(
 			([discipline, events]) => ({
 				code: discipline,
-				events,
+				events: events?.toSorted((a, b) => {
+					let cmp = a.start.localeCompare(b.start);
+					return cmp === 0
+						? a.description.localeCompare(b.description)
+						: cmp;
+				}),
 			}),
 		);
 	}
@@ -39,11 +43,7 @@
 		.map((day) => ({
 			date: day.date,
 			disciplines: day.disciplines.map((discipline) => {
-				let id = idForGroup({
-					date: day.date,
-					discipline,
-				});
-				let open = $state(initOpen.includes(id));
+				let open = $state(false);
 				return {
 					code: discipline.code,
 					/** @type {boolean} */
@@ -56,7 +56,7 @@
 					},
 					/** @type {Array<Event & { checked: boolean; id: string }>} */
 					events: discipline.events.map((evt) => {
-						let checked = $state(initSel.includes(evt.id));
+						let checked = $state(false);
 						return {
 							...evt,
 							/** @type {boolean} */
@@ -72,6 +72,24 @@
 				};
 			}),
 		}));
+
+	onMount(() => {
+		let initOpen = ($page.url.searchParams.get("open") ?? "").split(" ");
+		let initSel = ($page.url.searchParams.get("selected") ?? "").split(" ");
+		for (let day of days) {
+			for (let discipline of day.disciplines) {
+				let id = idForGroup({ date: day.date, discipline });
+				if (initOpen.includes(id)) {
+					discipline.open = true;
+				}
+				for (let event of discipline.events) {
+					if (initSel.includes(event.id)) {
+						event.checked = true;
+					}
+				}
+			}
+		}
+	});
 
 	/** @param {{ date: string, discipline: { code: string } }} arg */
 	function idForGroup({ date, discipline }) {
@@ -106,16 +124,12 @@
 
 	$effect(() => {
 		let ids = selected.map((event) => event.id);
-		let url = new URL(location.href);
-		if (ids.length) {
-			url.searchParams.set("selected", ids.join(":"));
+		if (ids.length === 0) {
+			goto("/?", { noScroll: true });
 		} else {
-			url.searchParams.delete("selected");
+			goto(`/?selected=${ids.join(sep)}`, { noScroll: true });
 		}
-		goto(url, { noScroll: true });
 	});
-
-	let search = $state("");
 </script>
 
 <svelte:head>
@@ -127,7 +141,7 @@
 
 <div class="flex flex-col">
 	<div
-		class="text-sm top-2 sticky z-20 text-gray-600 bg-white bg-opacity-30 self-end"
+		class="text-sm top-2 sticky z-20 text-gray-600 bg-white bg-opacity-30 self-end h-5"
 	>
 		{#if selected.length > 0}
 			<button
@@ -152,6 +166,7 @@
 				onmousedown={() =>
 					days.forEach((day) => {
 						day.disciplines.forEach((discipline) => {
+							discipline.open = false;
 							discipline.events.forEach((event) => {
 								event.checked = false;
 							});
