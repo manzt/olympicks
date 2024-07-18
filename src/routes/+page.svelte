@@ -1,12 +1,13 @@
 <script>
 	/** @typedef {import("./+page.server.js").Event} Event */
+	import { onMount } from "svelte";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
+
 	import Rings from "$lib/Rings.svelte";
 	import Medal from "$lib/Medal.svelte";
 	import Card from "$lib/Card.svelte";
 	import { createIcsEntry } from "$lib/create-ics-entry.js";
-	import { onMount } from "svelte";
 
 	let sep = "+";
 	let events = /** @type {import("./$types").PageData["events"]} */ (
@@ -125,9 +126,9 @@
 	$effect(() => {
 		let ids = selected.map((event) => event.id);
 		if (ids.length === 0) {
-			goto("/?", { noScroll: true });
+			goto("/olympicks/?", { noScroll: true });
 		} else {
-			goto(`/?selected=${ids.join(sep)}`, { noScroll: true });
+			goto(`/olympicks/?selected=${ids.join(sep)}`, { noScroll: true });
 		}
 	});
 </script>
