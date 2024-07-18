@@ -1,9 +1,9 @@
 <script>
 	import { slide } from "svelte/transition";
-	import Medal from "./Medal.svelte";
-	import Card from "./Card.svelte";
+	import Medal from "$lib/components/Medal.svelte";
+	import Card from "$lib/components/Card.svelte";
 
-	/** @type {{ item: import("./state.svelte.js").EventGroup }} */
+	/** @type {{ item: import("$lib/state.svelte.js").EventGroup }} */
 	let { item } = $props();
 	let hasMedal = item.events.some((e) => e.medal !== "");
 	let n = $derived(

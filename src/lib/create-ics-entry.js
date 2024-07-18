@@ -63,7 +63,7 @@ function mergeNonMatchEventGroup(events) {
 /**
  * Combines events that are not matches into a single calendar event if they overlap.
  *
- * @param {Event[]} events
+ * @param {Array<schema.Event>} events
  * @returns {Array<{ title: string, description: string, start: string, end: string }>}
  */
 function combineEntries(events) {
@@ -90,7 +90,7 @@ function combineEntries(events) {
 }
 
 /**
- * @param {Array<Event>} events
+ * @param {Array<schema.Event>} events
  * @returns {string}
  */
 export function createIcsEntry(events) {

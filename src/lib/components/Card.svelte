@@ -1,5 +1,5 @@
 <script>
-	import Medal from "./Medal.svelte";
+	import Medal from "$lib/components/Medal.svelte";
 	/** @type {{ event: import("$lib/state.svelte.js").SelectableEvent }} */
 	let { event } = $props();
 

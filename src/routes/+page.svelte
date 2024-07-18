@@ -4,10 +4,8 @@
 	import { page } from "$app/stores";
 
 	import { Section } from "$lib/state.svelte.js";
-	import EventGroup from "$lib/EventGroup.svelte";
 	import { createIcsEntry } from "$lib/create-ics-entry.js";
-
-	let sep = "+";
+	import EventGroup from "$lib/components/EventGroup.svelte";
 
 	/** @type {import("./$types").PageData["sections"]} */
 	let raw = $page.data.sections;
@@ -24,22 +22,21 @@
 		}
 	});
 
-	let selected = $derived(
-		sections.flatMap((sec) =>
-			sec.items.flatMap((item) =>
-				item.events.filter((event) => event.checked),
-			),
-		),
+	// just get a nice reference to the selected events
+	let events = sections.flatMap((sec) =>
+		sec.items.flatMap((item) => item.events),
 	);
+
+	let selected = $derived(events.filter((event) => event.checked));
 
 	$effect(() => {
 		let ids = selected.map((event) => event.id);
-		let base = $page.url.pathname.replace(/\/$/, "");
-		if (ids.length === 0) {
-			goto(`${base}/`, { noScroll: true });
-		} else {
-			goto(`${base}?selected=${ids.join(sep)}`, { noScroll: true });
+		let url = new URL($page.url);
+		url.searchParams.delete("selected");
+		if (ids.length > 0) {
+			url.searchParams.append("selected", ids.join(" "));
 		}
+		goto(url.href, { noScroll: true });
 	});
 </script>
 
