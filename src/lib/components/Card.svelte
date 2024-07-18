@@ -51,7 +51,7 @@ function getFlagUrl(team: Label) {
 		>
 			<div class="flex items-center">
 				<span class="w-20 text-wrap text-right"
-					>{event.match.team1.name}</span
+					>{event.match.team1.name.toLowerCase()}</span
 				>
 				<img
 					src={getFlagUrl(event.match.team1)}
@@ -67,7 +67,7 @@ function getFlagUrl(team: Label) {
 					alt={event.match.team2.name}
 				/>
 				<span class="w-20 text-wrap text-left"
-					>{event.match.team2.name}</span
+					>{event.match.team2.name.toLowerCase()}</span
 				>
 			</div>
 		</div>
