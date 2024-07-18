@@ -9,35 +9,35 @@ import Collapsible from "$lib/components/Collapsible.svelte";
 import Trigger from "$lib/components/Trigger.svelte";
 import { createIcsEntry } from "$lib/create-ics-entry.ts";
 import { groupBy } from "$lib/group-by.ts";
-import { type EventGroupData, Section } from "$lib/state.svelte.ts";
+import { EventGroup, SelectableEvent } from "$lib/state.svelte.ts";
 
-let { events } = $page.data as PageData;
+let events = ($page.data as PageData).events.map((e) => new SelectableEvent(e));
 
 // Let's just split the events by YYYY-MM-DD
 let byMonthDay = groupBy(events, (item) => stringifyMonthDay(item.start));
-let byMonthDayAndDiscipline: Record<string, Array<EventGroupData>> = {};
+let byMonthDayAndDiscipline: Record<string, Array<EventGroup>> = {};
 
 for (let [monthDayString, items] of byMonthDay) {
 	// Group by discipline short name.
 	let grp = groupBy(items, ({ discipline }) => discipline.shortName);
 	byMonthDayAndDiscipline[monthDayString] = Array.from(grp.entries()).map(
-		([shortName, events]) => ({
-			// Just grab the label from the first event.
-			// We know there has to be at least one event
-			// in the group (for the grouping to exist).
-			label: { name: events[0].discipline.name, shortName: shortName },
-			events: events.toSorted((a, b) => {
-				/**
-				 * A custom sort function for events.
-				 *
-				 * 1.) Sort by start date.
-				 * 2.) If the start dates are the same, sort by description (i.e., the event name)
-				 */
-				let cmp = a.start.localeCompare(b.start);
-				return cmp === 0 ? a.description.localeCompare(b.description) : cmp;
-			}),
-			open: false,
-		}),
+		// Just grab the label from the first event.
+		// We know there has to be at least one event
+		// in the group (for the grouping to exist).
+		([shortName, events]) =>
+			new EventGroup(
+				{ name: events[0].discipline.name, shortName: shortName },
+				events.toSorted((a, b) => {
+					/**
+					 * A custom sort function for events.
+					 *
+					 * 1.) Sort by start date.
+					 * 2.) If the start dates are the same, sort by description (i.e., the event name)
+					 */
+					let cmp = a.start.localeCompare(b.start);
+					return cmp === 0 ? a.description.localeCompare(b.description) : cmp;
+				}),
+			),
 	);
 }
 
@@ -45,10 +45,10 @@ let sections = Object.entries(byMonthDayAndDiscipline)
 	.toSorted(([_a, a], [_b, b]) =>
 		a[0].events[0].start.localeCompare(b[0].events[0].start),
 	)
-	.map(
-		([_, items]) =>
-			new Section(stringifyMonthDay(items[0].events[0].start), items),
-	);
+	.map(([_, items]) => ({
+		title: stringifyMonthDay(items[0].events[0].start),
+		items: items,
+	}));
 
 // We want to do this on the client to have the user's timezone
 function stringifyMonthDay(isoDateString: string) {
@@ -123,7 +123,7 @@ $effect(() => {
 			<button
 				class="cursor-pointer border-none text-bold mr-2"
 				title="Reset all selections"
-				onmousedown={() => sections.forEach((sec) => sec.reset())}
+				onmousedown={() => sections.forEach((sec) => sec.items.forEach(i => i.reset()))}
 				><b>reset</b></button
 			>
 		{/if}

@@ -31,9 +31,9 @@ export class EventGroup {
 	label: schema.Label;
 	events: Array<SelectableEvent>;
 
-	constructor(label: schema.Label, events: Array<schema.Event>) {
+	constructor(label: schema.Label, events: Array<SelectableEvent>) {
 		this.label = label;
-		this.events = events.map((event) => new SelectableEvent(event));
+		this.events = events;
 	}
 
 	reset(): void {
@@ -42,22 +42,5 @@ export class EventGroup {
 		this.events.forEach((event) => {
 			event.checked = false;
 		});
-	}
-}
-
-export type EventGroupData = Omit<EventGroup, "reset">;
-
-/** Represents a Section of Olympic events. */
-export class Section {
-	title: string;
-	items: Array<EventGroup>;
-	constructor(title: string, items: Array<EventGroupData>) {
-		this.title = title;
-		this.items = items.map((item) => new EventGroup(item.label, item.events));
-	}
-
-	reset(): void {
-		// biome-ignore lint/complexity/noForEach: This is more concise
-		this.items.forEach((group) => group.reset());
 	}
 }
