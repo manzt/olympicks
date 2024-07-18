@@ -75,28 +75,15 @@
 		}));
 
 	onMount(() => {
-		let initOpen = ($page.url.searchParams.get("open") ?? "").split(" ");
 		let initSel = ($page.url.searchParams.get("selected") ?? "").split(" ");
 		for (let day of days) {
 			for (let discipline of day.disciplines) {
-				let id = idForGroup({ date: day.date, discipline });
-				if (initOpen.includes(id)) {
-					discipline.open = true;
-				}
 				for (let event of discipline.events) {
-					if (initSel.includes(event.id)) {
-						event.checked = true;
-					}
+					event.checked = initSel.includes(event.id);
 				}
 			}
 		}
 	});
-
-	/** @param {{ date: string, discipline: { code: string } }} arg */
-	function idForGroup({ date, discipline }) {
-		let d = date.split("-").join("");
-		return `${d}${discipline.code}`;
-	}
 
 	/** @param {string} str */
 	function formatDate(str) {
@@ -145,11 +132,11 @@
 </svelte:head>
 
 <Rings />
-<br>
+<br />
 
 <div class="flex flex-col">
 	<div
-		class="text-sm top-2 sticky z-20 text-gray-600 bg-white bg-opacity-30 self-end h-5"
+		class="text-sm top-5 sticky z-20 text-gray-600 bg-white bg-opacity-30 self-end h-5"
 	>
 		{#if selected.length > 0}
 			<button
@@ -193,9 +180,10 @@
 	{#each days as day}
 		<div>
 			<h2
-				class="text-xl flex items-center flex-end text-right sticky top-0 z-10 bg-white border-gray-600 border-b-1 h-10"
+				class="text-xl flex items-center py-8 flex-end text-right sticky top-0 z-10 bg-white border-gray-600 border-b-1 h-10"
 			>
-				{formatDate(day.date).toLowerCase()}
+				<!-- TODO: formatting the truncated date leads to the wrong day because of UTC offsets -->
+				{formatDate(day.disciplines[0].events[0].start).toLowerCase()}
 			</h2>
 			<div class="flex flex-col">
 				{#each day.disciplines as d}
@@ -206,7 +194,7 @@
 					)}
 					<div class="flex flex-col border-gray-200 border-b">
 						<button
-							class="sticky top-10 flex justify-between items-center p-2 w-full cursor-pointer bg-gradient-to-b from-white from-80% to-100% to-transparent"
+							class="sticky top-16 flex justify-between items-center p-2 w-full cursor-pointer bg-gradient-to-b from-white from-80% to-100% to-transparent"
 							onclick={function (evt) {
 								if (evt.target instanceof HTMLInputElement)
 									return;

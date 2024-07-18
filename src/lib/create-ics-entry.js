@@ -12,7 +12,7 @@ function convertToIcsDate(isoString) {
 	return [
 		date.getUTCFullYear(),
 		date.getUTCMonth() + 1, // getMonth() returns 0-11
-		date.getUTCDate(),
+		date.getUTCDate() - 1,
 		date.getUTCHours(),
 		date.getUTCMinutes(),
 	];
@@ -65,7 +65,7 @@ function mergeNonMatchEventGroup(group) {
  */
 function formatMatchEntry(match) {
 	if (match && "team1" in match) {
-		return ` - ${match.team1.code} vs ${match.team2.code}`;
+		return ` - ${match.team1.description} vs ${match.team2.description}`;
 	}
 	return "";
 }
