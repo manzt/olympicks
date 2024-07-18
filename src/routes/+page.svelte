@@ -130,6 +130,12 @@
 		} else {
 			goto(`/olympicks/?selected=${ids.join(sep)}`, { noScroll: true });
 		}
+		// TODO: need this to work locally
+		// if (ids.length === 0) {
+		// 	goto("/?", { noScroll: true });
+		// } else {
+		// 	goto(`/?selected=${ids.join(sep)}`, { noScroll: true });
+		// }
 	});
 </script>
 
@@ -160,7 +166,7 @@
 					a.download = "olympicks.ics";
 					a.click();
 					URL.revokeObjectURL(url);
-				}}><b>Export</b></button
+				}}><b>export</b> .ics</button
 			>
 			<button
 				class="cursor-pointer border-none text-bold mr-2"
@@ -173,7 +179,7 @@
 								event.checked = false;
 							});
 						});
-					})}><b>Reset</b></button
+					})}><b>reset</b></button
 			>
 		{/if}
 		<span class="tabular-nums">
