@@ -5,7 +5,11 @@ let {
 	open = $bindable(),
 	trigger,
 	content,
-}: { open: boolean; trigger: Snippet; content: Snippet } = $props();
+}: {
+	open: boolean;
+	trigger: Snippet;
+	content: Snippet;
+} = $props();
 
 function show() {
 	// @ts-expect-error

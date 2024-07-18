@@ -3,6 +3,7 @@ import type * as schema from "$lib/schema.ts";
 /** Represents an Olympic event that is selecatble. */
 export class SelectableEvent {
 	checked = $state(false);
+	visible = $state(true);
 	id: string;
 	start: string;
 	end: string;

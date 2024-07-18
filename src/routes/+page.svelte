@@ -8,6 +8,7 @@ import Card from "$lib/components/Card.svelte";
 import Collapsible from "$lib/components/Collapsible.svelte";
 import Trigger from "$lib/components/Trigger.svelte";
 import { createIcsEntry } from "$lib/create-ics-entry.ts";
+import { blurOnEscape, selectTextOnFocus } from "$lib/directives.ts";
 import { groupBy } from "$lib/group-by.ts";
 import { EventGroup, SelectableEvent } from "$lib/state.svelte.ts";
 
@@ -79,12 +80,34 @@ $effect(() => {
 	}
 	goto(url.href, { noScroll: true });
 });
+
+let search = $state("");
+
+$effect(() => {
+	if (search === "") {
+		for (let event of events) {
+			event.visible = true;
+		}
+		return;
+	}
+	let tokens = new Set(search.toLowerCase().split(" "));
+	for (let event of events) {
+		const searchStrings = [
+			event.description.toLowerCase(),
+			event.discipline.name.toLowerCase(),
+			event.discipline.shortName.toLowerCase(),
+		];
+		let visible = Array.from(tokens).every((token) =>
+			searchStrings.some((str) => str.includes(token)),
+		);
+		event.visible = visible;
+	}
+});
 </script>
 
 <svelte:head>
 	<title>olympicks</title>
-	<meta
-		name="description"
+	<meta name="description"
 		content="export 2024 summer olympic events to your calendar"
 	/>
 </svelte:head>
@@ -106,6 +129,15 @@ $effect(() => {
 		export 2024 summer olympic events to your calendar
 	</p>
 </div>
+
+<input
+	class="w-full p-2 mt-2 accent-gray-600 rounded-md border-1 border-gray-200"
+	type="search"
+	placeholder="Filter events..."
+	bind:value={search}
+	use:selectTextOnFocus
+	use:blurOnEscape
+/>
 
 <br />
 
@@ -146,29 +178,35 @@ $effect(() => {
 	</div>
 
 	{#each sections as { title, items }}
-		<div>
-			<h2
-				class="text-xl flex items-center py-8 flex-end text-right sticky top-0 z-10 bg-white border-gray-600 border-b-1 h-10"
-			>
-				{title}
-			</h2>
-			<div class="flex flex-col">
-				{#each items as item}
-					<Collapsible open={item.open}>
-						{#snippet trigger()}
-							<Trigger {item} />
-						{/snippet}
-						{#snippet content()}
-							<div class="flex flex-col items-end gap-1 last:pb-2">
-								{#each item.events as event}
-									<Card {event} />
-								{/each}
-							</div>
-						{/snippet}
-					</Collapsible>
-				{/each}
+		{@const visible = items.some(i => i.events.some(e => e.visible))}
+		{#if visible}
+			<div>
+				<h2
+					class="text-xl flex items-center py-8 flex-end text-right sticky top-0 z-10 bg-white border-gray-600 border-b-1 h-10"
+				>
+					{title}
+				</h2>
+				<div class="flex flex-col">
+					{#each items as item}
+						{@const filtered = item.events.filter(e => e.visible)}
+						{#if filtered.length > 0}
+							<Collapsible open={item.open}>
+								{#snippet trigger()}
+									<Trigger {item} />
+								{/snippet}
+								{#snippet content()}
+									<div class="flex flex-col items-end gap-1 last:pb-2">
+										{#each filtered as event}
+											<Card {event} />
+										{/each}
+									</div>
+								{/snippet}
+							</Collapsible>
+						{/if}
+					{/each}
+				</div>
 			</div>
-		</div>
-		<br />
+			<br />
+		{/if}
 	{/each}
 </div>
