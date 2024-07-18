@@ -21,9 +21,9 @@ importers:
         specifier: 4.0.0-alpha.17
         version: 4.0.0-alpha.17
     devDependencies:
-      '@sveltejs/adapter-auto':
-        specifier: ^3.0.0
-        version: 3.2.2(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))
+      '@sveltejs/adapter-static':
+        specifier: ^3.0.2
+        version: 3.0.2(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))
       '@sveltejs/kit':
         specifier: ^2.0.0
         version: 2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1))
@@ -291,8 +291,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@sveltejs/adapter-auto@3.2.2':
-    resolution: {integrity: sha512-Mso5xPCA8zgcKrv+QioVlqMZkyUQ5MjDJiEPuG/Z7cV/5tmwV7LmcVWk5tZ+H0NCOV1x12AsoSpt/CwFwuVXMA==}
+  '@sveltejs/adapter-static@3.0.2':
+    resolution: {integrity: sha512-/EBFydZDwfwFfFEuF1vzUseBoRziwKP7AoHAwv+Ot3M084sE/HTVBHf9mCmXfdM9ijprY5YEugZjleflncX5fQ==}
     peerDependencies:
       '@sveltejs/kit': ^2.0.0
 
@@ -998,10 +998,9 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.18.1':
     optional: true
 
-  '@sveltejs/adapter-auto@3.2.2(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))':
+  '@sveltejs/adapter-static@3.0.2(@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))':
     dependencies:
       '@sveltejs/kit': 2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1))
-      import-meta-resolve: 4.1.0
 
   '@sveltejs/kit@2.5.18(@sveltejs/vite-plugin-svelte@3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)))(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1))':
     dependencies:

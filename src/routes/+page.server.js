@@ -1,8 +1,4 @@
-import * as fs from "node:fs/promises";
-
-// since there's no dynamic data here, we can prerender
-// it so that it gets served as a static asset in production
-export const prerender = false;
+export const prerender = true;
 
 /**
  * @typedef Event
@@ -15,7 +11,8 @@ export const prerender = false;
  */
 
 export async function load() {
-	let text = await fs.readFile(new URL("data.json", import.meta.url), "utf8")
+	let response = await fetch(new URL("data.json", import.meta.url))
+	let text = await response.text();
 	let events = /** @type {Array<Event>} */(JSON.parse(text));
 	return { events }
 }
