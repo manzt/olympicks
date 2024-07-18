@@ -8,15 +8,12 @@ importers:
 
   .:
     dependencies:
-      '@tailwindcss/vite':
-        specifier: 4.0.0-alpha.17
-        version: 4.0.0-alpha.17(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1))
       ics:
         specifier: ^3.7.6
         version: 3.7.6
-      tailwindcss:
-        specifier: 4.0.0-alpha.17
-        version: 4.0.0-alpha.17
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
     devDependencies:
       '@biomejs/biome':
         specifier: 1.8.3
@@ -30,6 +27,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^3.0.0
         version: 3.1.1(svelte@5.0.0-next.188)(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1))
+      '@tailwindcss/vite':
+        specifier: 4.0.0-alpha.17
+        version: 4.0.0-alpha.17(vite@5.3.4(@types/node@20.14.11)(lightningcss@1.25.1))
       '@types/node':
         specifier: ^20.14.11
         version: 20.14.11
@@ -39,15 +39,15 @@ importers:
       svelte-check:
         specifier: ^3.6.0
         version: 3.8.4(postcss@8.4.39)(svelte@5.0.0-next.188)
+      tailwindcss:
+        specifier: 4.0.0-alpha.17
+        version: 4.0.0-alpha.17
       typescript:
         specifier: ^5.0.0
         version: 5.5.3
       vite:
         specifier: ^5.0.3
         version: 5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
 
 packages:
 

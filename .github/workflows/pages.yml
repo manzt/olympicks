@@ -15,14 +15,11 @@ jobs:
           node-version: latest
       - uses: pnpm/action-setup@v3
         with:
-          version: 9
           run_install: true
-
       - env:
           BASE_PATH: '/${{ github.event.repository.name }}'
         run: |
           pnpm build
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: 'build/'
