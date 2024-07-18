@@ -8,7 +8,7 @@
 	</main>
 
 	<footer
-		class="w-full flex justify-center text-gray-600 text-center items-center pb-10"
+		class="comic-sans w-full flex justify-center text-gray-600 text-center items-center pb-10"
 	>
 		<p>
 			made by

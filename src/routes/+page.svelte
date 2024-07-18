@@ -4,7 +4,6 @@
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 
-	import Rings from "$lib/Rings.svelte";
 	import Medal from "$lib/Medal.svelte";
 	import Card from "$lib/Card.svelte";
 	import { createIcsEntry } from "$lib/create-ics-entry.js";
@@ -131,7 +130,11 @@
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
 
-<Rings />
+<div class="comic-sans">
+	<h1 class="text-4xl text-center font-bold mb-2">olympicks</h1>
+	<p class="text-center text-gray-500 mb-2 text-balance">add 2024 summer olympic events to your calendar</p>
+</div>
+
 <br />
 
 <div class="flex flex-col">
