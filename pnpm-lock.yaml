@@ -45,6 +45,9 @@ importers:
       vite:
         specifier: ^5.0.3
         version: 5.3.4(@types/node@20.14.11)(lightningcss@1.25.1)
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
 
 packages:
 
@@ -855,6 +858,9 @@ packages:
   zimmerframe@1.1.2:
     resolution: {integrity: sha512-rAbqEGa8ovJy4pyBxZM70hg4pE6gDgaQ0Sl9M3enG3I0d6H4XSAM3GeNGLKnsBpuijUow064sf7ww1nutC5/3w==}
 
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -1513,3 +1519,5 @@ snapshots:
       type-fest: 2.19.0
 
   zimmerframe@1.1.2: {}
+
+  zod@3.23.8: {}

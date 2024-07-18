@@ -1,10 +1,9 @@
 <script>
 	import Medal from "./Medal.svelte";
-
-	/** @type {{ event: import("../routes/+page.server.js").Event & { checked:  boolean }}} */
+	/** @type {{ event: import("$lib/Section.js").SelectableEvent }} */
 	let { event } = $props();
 
-	/** @typedef {{ description: string, code: string }} Team */
+	/** @typedef {{ name: string, shortName: string }} Team */
 	/**
 	 * @param {any} x
 	 * @returns {x is { team1: Team, team2: Team }} */
@@ -23,7 +22,8 @@
 
 	/** @param {Team} team */
 	function getFlagUrl(team) {
-		return `https://gstatic.olympics.com/s1/f_auto/static/light/flag/paris-2024/olympic/3x2/${team.code}.svg`;
+		let code = team.shortName;
+		return `https://gstatic.olympics.com/s1/f_auto/static/light/flag/paris-2024/olympic/3x2/${code}.svg`;
 	}
 </script>
 
@@ -35,12 +35,9 @@
 >
 	<div class="flex justify-between">
 		<div class="flex text-ellipsis flex-1 overflow-hidden">
-			<span class="font-bold tabular-nums"
-				>{formatTime(event.start)}</span
+			<span class="font-bold tabular-nums">{formatTime(event.start)}</span
 			>
-			<div
-				class="ml-4 text-gray-500 flex-1 kext-balance text-left"
-			>
+			<div class="ml-4 text-gray-500 flex-1 kext-balance text-left">
 				{event.description.toLowerCase()}
 			</div>
 		</div>
@@ -62,12 +59,12 @@
 		>
 			<div class="flex items-center">
 				<span class="w-20 text-wrap text-right"
-					>{event.match.team1.description}</span
+					>{event.match.team1.name}</span
 				>
 				<img
 					src={getFlagUrl(event.match.team1)}
 					class="w-6 h-4 ml-2 border border-gray-50"
-					alt={event.match.team1.description}
+					alt={event.match.team1.name}
 				/>
 			</div>
 			<span class="mx-2">vs</span>
@@ -75,10 +72,10 @@
 				<img
 					src={getFlagUrl(event.match.team2)}
 					class="w-6 h-4 mr-2 border border-gray-50"
-					alt={event.match.team2.description}
+					alt={event.match.team2.name}
 				/>
 				<span class="w-20 text-wrap text-left"
-					>{event.match.team2.description}</span
+					>{event.match.team2.name}</span
 				>
 			</div>
 		</div>

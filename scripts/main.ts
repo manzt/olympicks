@@ -104,8 +104,13 @@ const nested = await Promise.all([
 const data = nested.flat();
 
 // Drop duplicates (use start time + discipline code as key)
-const groups = Object.groupBy(data, (item) =>
-  `${item.start.toString()}-${item.discipline.code}-${item.description}`
+const groups = Object.groupBy(
+  data,
+  (item) =>
+    `${item.start.toString()}-${item.discipline.code}-${item.description}`,
 );
 
-Deno.writeTextFile("data.json", JSON.stringify(groups.map((group) => group[0]), null, 2));
+Deno.writeTextFile(
+  "data.json",
+  JSON.stringify(groups.map((group) => group[0]), null, 2),
+);
