@@ -104,18 +104,18 @@ $effect(() => {
 			</h2>
 			<div class="flex flex-col">
 				{#each items as item}
-<Collapsible open={item.open}>
-	{#snippet trigger()}
-		<Trigger {item} />
-	{/snippet}
-	{#snippet content()}
-		<div class="flex flex-col items-end gap-1 last:pb-2">
-			{#each item.events as event}
-				<Card {event} />
-			{/each}
-		</div>
-	{/snippet}
-</Collapsible>
+					<Collapsible open={item.open}>
+						{#snippet trigger()}
+							<Trigger {item} />
+						{/snippet}
+						{#snippet content()}
+							<div class="flex flex-col items-end gap-1 last:pb-2">
+								{#each item.events as event}
+									<Card {event} />
+								{/each}
+							</div>
+						{/snippet}
+					</Collapsible>
 				{/each}
 			</div>
 		</div>
