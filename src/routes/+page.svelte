@@ -9,7 +9,7 @@ import Collapsible from "$lib/components/Collapsible.svelte";
 import Trigger from "$lib/components/Trigger.svelte";
 import { createIcsEntry } from "$lib/create-ics-entry.ts";
 import { groupBy } from "$lib/group-by.ts";
-import { Section, type EventGroupData } from "$lib/state.svelte.ts";
+import { type EventGroupData, Section } from "$lib/state.svelte.ts";
 
 let { events } = $page.data as PageData;
 

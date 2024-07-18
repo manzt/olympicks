@@ -6,7 +6,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "lint": "biome ci"
+    "fix": "biome check --fix"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
