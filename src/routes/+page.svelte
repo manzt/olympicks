@@ -5,7 +5,9 @@
 
 	import { Section } from "$lib/state.svelte.js";
 	import { createIcsEntry } from "$lib/create-ics-entry.js";
-	import EventGroup from "$lib/components/EventGroup.svelte";
+	import Collapsible from "$lib/components/Collapsible.svelte";
+	import Card from "$lib/components/Card.svelte";
+    import Trigger from "$lib/components/Trigger.svelte";
 
 	/** @type {import("./$types").PageData["sections"]} */
 	let raw = $page.data.sections;
@@ -102,7 +104,18 @@
 			</h2>
 			<div class="flex flex-col">
 				{#each items as item}
-					<EventGroup {item} />
+<Collapsible open={item.open}>
+	{#snippet trigger()}
+		<Trigger {item} />
+	{/snippet}
+	{#snippet content()}
+		<div class="flex flex-col items-end gap-1 last:pb-2">
+			{#each item.events as event}
+				<Card {event} />
+			{/each}
+		</div>
+	{/snippet}
+</Collapsible>
 				{/each}
 			</div>
 		</div>
