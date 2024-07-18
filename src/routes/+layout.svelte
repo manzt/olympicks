@@ -8,13 +8,13 @@
 	</main>
 
 	<footer
-		class="w-full flex justify-center lg:justify-start lg:text-left text-center bg-gradient-to-t from-white to-white lg:to-transparent lg: items-center p-4 sticky z-40 bottom-0 font-thin"
+		class="w-full flex justify-center text-gray-600 text-center items-center pb-10"
 	>
-		<p class="max-w-48">
+		<p>
 			made by
-			<a href="https://trevorma.nz" class="font-medium">trevor manz</a>
+			<a href="https://trevorma.nz" class="font-bold">trevor manz</a>
 			data from
-			<a href="https://olympics.com" class="font-medium">olympics.com</a>
+			<a href="https://olympics.com" class="font-bold">olympics.com</a>
 			<a href="https://github.com/manzt/olympicks">
 				<svg
 					viewBox="0 0 98 98"
