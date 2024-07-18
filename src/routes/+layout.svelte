@@ -15,7 +15,7 @@ let { children }: { children: Snippet } = $props();
 	>
 		<p>
 			made by
-			<a href="https://trevorma.nz" class="font-bold">trevor manz</a>
+			<a href="https://trevorma.nz" class="font-bold">trevor manz</a>.
 			data from
 			<a href="https://olympics.com" class="font-bold">olympics.com</a>
 			<a href="https://github.com/manzt/olympicks">
