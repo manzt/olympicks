@@ -139,6 +139,7 @@
 </svelte:head>
 
 <Rings />
+<br>
 
 <div class="flex flex-col">
 	<div
