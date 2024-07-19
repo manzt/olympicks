@@ -12,13 +12,19 @@ export function selectTextOnFocus(node: HTMLElement) {
 	};
 }
 
+function isEscape(event: KeyboardEvent) {
+	if (event.key === "Escape") return true;
+	// Vim-like escape
+	return event.ctrlKey && event.key === "[";
+}
+
 /** Blurs the node when Escape is pressed */
 export function blurOnEscape(node: HTMLInputElement) {
 	let handleKey = (event: KeyboardEvent) => {
-		if (event.key !== "Escape") return;
+		if (!isEscape(event)) return;
 		node.value = "";
 		node.dispatchEvent(new Event("input"));
-		node.blur?.();
+		if (event.key === "Escape") node.blur?.();
 	};
 	node.addEventListener("keydown", handleKey);
 	return {
