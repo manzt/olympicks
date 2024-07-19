@@ -126,7 +126,7 @@ $effect(() => {
 <input
 	class="w-full p-2 mt-2 accent-gray-600 rounded-md border-1 border-gray-200"
 	type="search"
-	placeholder="Filter events..."
+	placeholder="filter events..."
 	bind:value={search}
 	use:selectTextOnFocus
 	use:blurOnEscape
