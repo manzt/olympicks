@@ -85,23 +85,26 @@ $effect(() => {
 let search = $state("");
 
 $effect(() => {
-	if (search === "") {
-		for (let event of events) {
-			event.visible = true;
+	let tokens = Array.from(new Set(search.toLowerCase().split(" ")));
+	for (let section of sections) {
+		for (let item of section.items) {
+			// Close all groups
+			item.open = false;
+			for (let event of item.events) {
+				if (tokens.length === 0) {
+					event.visible = true;
+					continue;
+				}
+				let toSearch = [
+					event.description.toLowerCase(),
+					event.discipline.name.toLowerCase(),
+					event.discipline.shortName.toLowerCase(),
+				];
+				event.visible = tokens.every((t) =>
+					toSearch.some((str) => str.includes(t)),
+				);
+			}
 		}
-		return;
-	}
-	let tokens = new Set(search.toLowerCase().split(" "));
-	for (let event of events) {
-		const searchStrings = [
-			event.description.toLowerCase(),
-			event.discipline.name.toLowerCase(),
-			event.discipline.shortName.toLowerCase(),
-		];
-		let visible = Array.from(tokens).every((token) =>
-			searchStrings.some((str) => str.includes(token)),
-		);
-		event.visible = visible;
 	}
 });
 </script>
@@ -112,17 +115,6 @@ $effect(() => {
 		content="export 2024 summer olympic events to your calendar"
 	/>
 </svelte:head>
-
-<svelte:window on:popstate={(evt) => {
-	evt.preventDefault();
-	if (!evt.state.ids) return;
-	for (let event of events) {
-		event.checked = false;
-		if (evt.state.ids.includes(event.id)) {
-			event.checked = true;
-		}
-	}
-}} />
 
 <div class="comic-sans">
 	<h1 class="text-4xl text-center font-bold mb-2">olympicks</h1>
@@ -162,13 +154,18 @@ $effect(() => {
 					a.download = "olympicks.ics";
 					a.click();
 					URL.revokeObjectURL(url);
-
 				}}><b>export</b> .ics</button
 			>
 			<button
 				class="cursor-pointer border-none text-bold mr-2"
 				title="Reset all selections"
-				onmousedown={() => sections.forEach((sec) => sec.items.forEach(i => i.reset()))}
+				onmousedown={() => {
+					for (let section of sections) {
+						for (let item of section.items) {
+							item.reset();
+						}
+					}
+				}}
 				><b>reset</b></button
 			>
 		{/if}
@@ -193,7 +190,7 @@ $effect(() => {
 					{#each items as item}
 						{@const filtered = item.events.filter(e => e.visible)}
 						{#if filtered.length > 0}
-							<Collapsible open={item.open}>
+							<Collapsible bind:open={item.open}>
 								{#snippet trigger()}
 									<Trigger {item} />
 								{/snippet}

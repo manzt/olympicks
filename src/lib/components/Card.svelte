@@ -23,7 +23,7 @@ function getFlagUrl(team: Label) {
 	class="w-full md:w-md p-2 rounded-md cursor-pointer border-1 {event.checked
 		? 'border-gray-700'
 		: 'border-gray-200'}"
-	onclick={() => (event.checked = !event.checked)}
+	onclick={() => event.toggle()}
 >
 	<div class="flex justify-between">
 		<div class="flex text-ellipsis flex-1 overflow-hidden">

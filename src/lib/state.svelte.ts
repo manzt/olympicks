@@ -24,6 +24,10 @@ export class SelectableEvent {
 		this.checked = options.checked;
 		this.match = options.match;
 	}
+
+	toggle() {
+		this.checked = !this.checked;
+	}
 }
 
 /** Represents a collapsible group of Olympic events. */
@@ -39,9 +43,8 @@ export class EventGroup {
 
 	reset(): void {
 		this.open = false;
-		// biome-ignore lint/complexity/noForEach: this is more concise
-		this.events.forEach((event) => {
+		for (let event of this.events) {
 			event.checked = false;
-		});
+		}
 	}
 }
