@@ -1,6 +1,7 @@
 <script lang="ts">
 import { goto } from "$app/navigation";
 import { page } from "$app/stores";
+import posthog from "posthog-js";
 import { onMount } from "svelte";
 import type { PageData } from "./$types.ts";
 
@@ -150,6 +151,7 @@ $effect(() => {
 				class="cursor-pointer font-light text-gray-50 mr-2 rounded px-2 border border-gray-100 bg-gray-800"
 				title="Export selected events to .ics file"
 				onmousedown={async () => {
+					posthog.capture("Export Calendar Events", { checked: checked.map((e) => e.id).join(" ") });
 					let contents = createIcsEntry(checked);
 					let file = new File([contents], "olympicks.ics", {
 						type: "text/calendar",
@@ -160,6 +162,7 @@ $effect(() => {
 					a.download = "olympicks.ics";
 					a.click();
 					URL.revokeObjectURL(url);
+
 				}}><b>export</b> .ics</button
 			>
 			<button
