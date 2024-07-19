@@ -13,11 +13,12 @@ export function selectTextOnFocus(node: HTMLElement) {
 }
 
 /** Blurs the node when Escape is pressed */
-export function blurOnEscape(node: HTMLElement) {
+export function blurOnEscape(node: HTMLInputElement) {
 	let handleKey = (event: KeyboardEvent) => {
-		if (event.key === "Escape" && node && typeof node.blur === "function") {
-			node.blur();
-		}
+		if (event.key !== "Escape") return;
+		node.value = "";
+		node.dispatchEvent(new Event("input"));
+		node.blur?.();
 	};
 	node.addEventListener("keydown", handleKey);
 	return {
