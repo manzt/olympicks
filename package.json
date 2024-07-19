@@ -23,6 +23,7 @@
   "dependencies": {
     "fuse.js": "^7.0.0",
     "ics": "^3.7.6",
+    "posthog-js": "^1.148.0",
     "zod": "^3.23.8"
   },
   "packageManager": "pnpm@9.5.0"
