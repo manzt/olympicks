@@ -2,13 +2,37 @@
 import type { Snippet } from "svelte";
 import "../app.css";
 
-let { children }: { children: Snippet } = $props();
+let props: { children: Snippet } = $props();
+let showOnPixel = 150;
+let hidden = $state(true);
 </script>
+
+<svelte:window
+	on:scroll={() => {
+		let container = document.documentElement || document.body;
+		if (!container) return;
+		if (container.scrollTop > showOnPixel) {
+			hidden = false;
+		} else {
+			hidden = true;
+		}
+	}}
+/>
 
 <div class="flex flex-col min-h-screen">
 	<main class="flex-1 flex flex-col p-4 w-full max-w-4xl mx-auto box-border">
-		{@render children()}
+		{@render props.children()}
 	</main>
+
+	
+	<button
+		class:hidden
+		class="sticky bottom-16 sm:bottom-10 lg:bottom-5 right-10 bg-black text-white lg:bg-transparent lg:w-36 lg:text-black self-end z-20 rounded-full w-10 h-10 border-none cursor-pointer flex items-center justify-center hover:opacity-70 focus-visible:outline-none focus-visible:outline-black"
+		onmousedown={() => window.scrollTo({ top: 0, behavior: "auto" })}
+	>
+		<span>↑</span>
+		<span class="ml-2 hidden lg:block">back to top</span>
+	</button>
 
 	<footer
 		class="comic-sans w-full flex justify-center text-gray-600 text-center items-center pb-10"
