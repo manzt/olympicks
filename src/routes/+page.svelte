@@ -146,7 +146,7 @@ $effect(() => {
 </div>
 
 <input
-	class="w-full p-2 mt-2 accent-gray-600 rounded-md border-1 border-gray-200"
+	class="w-full p-2 mt-2 accent-gray-600 rounded-md border-1 border-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
 	type="search"
 	placeholder="filter events..."
 	bind:value={search}
