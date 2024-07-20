@@ -28,7 +28,12 @@ let hidden = $state(true);
 	<button
 		class:hidden
 		class="sticky bottom-16 sm:bottom-10 lg:bottom-5 right-10 bg-black text-white lg:bg-transparent lg:w-36 lg:text-black self-end z-20 rounded-full w-10 h-10 border-none cursor-pointer flex items-center justify-center hover:opacity-70 focus-visible:outline-none focus-visible:outline-black"
-		onmousedown={() => window.scrollTo({ top: 0, behavior: "auto" })}
+		onmousedown={() => {
+			window.scrollTo({ top: 0, behavior: "auto" })
+			// pages can subscribe to this event to do something
+			// when the user clicks back to top (i.e., close the open sections)
+			window.dispatchEvent(new CustomEvent("back-to-top"));
+		}}
 	>
 		<span>↑</span>
 		<span class="ml-2 hidden lg:block">back to top</span>

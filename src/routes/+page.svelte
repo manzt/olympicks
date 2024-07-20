@@ -68,6 +68,14 @@ onMount(() => {
 			event.checked = true;
 		}
 	}
+
+	window.addEventListener("back-to-top", () => {
+		for (let section of sections) {
+			for (let item of section.items) {
+				item.open = false;
+			}
+		}
+	});
 });
 
 let checked = $derived(events.filter((e) => e.checked));
