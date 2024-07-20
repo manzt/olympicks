@@ -1,41 +1,21 @@
-# create-svelte
+<h1>
+<p align="center">
+  <img src="./static/logo.svg" alt="olympicks" width="200">
+    <br>olympicks
+</h1>
+  <p align="center">
+    <span>export 2024 summer olympic events to your calendar</span>
+  </p>
+</p>
 
 Everything you need to build a Svelte project, powered by
 [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
 
-## Creating a project
+## development
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or
-`pnpm install` or `yarn`), start a development server:
+olympicks is [sveltekit](https://kit.svelte.dev/) app.
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+pnpm install
+pnpm dev
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an
-> [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
