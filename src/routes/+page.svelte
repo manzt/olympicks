@@ -120,13 +120,22 @@ $effect(() => {
 
 <svelte:head>
 	<title>olympicks</title>
-	<meta name="description" content="export 2024 summer olympic events to your calendar" />
+	<meta name="description" content="export 2024 summer olympic events to your calendar">
 
-	<meta property="og:title" content="olympicks">
+	<!-- Facebook Meta Tags -->
+	<meta property="og:url" content="https://olympicks.xyz/">
 	<meta property="og:type" content="website">
-	<meta property="og:url" content="https://olympicks.xyz">
-	<meta property="og:image" content="https://olympics.xyz/og.png">
+	<meta property="og:title" content="olympicks">
 	<meta property="og:description" content="export 2024 summer olympic events to your calendar">
+	<meta property="og:image" content="https://olympicks.xyz/og.png">
+
+	<!-- Twitter Meta Tags -->
+	<meta name="twitter:card" content="summary_large_image">
+	<meta property="twitter:domain" content="olympicks.xyz">
+	<meta property="twitter:url" content="https://olympicks.xyz/">
+	<meta name="twitter:title" content="olympicks">
+	<meta name="twitter:description" content="export 2024 summer olympic events to your calendar">
+	<meta name="twitter:image" content="https://olympicks.xyz/og.png">
 </svelte:head>
 
 <div class="comic-sans">
