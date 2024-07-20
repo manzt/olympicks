@@ -7,6 +7,7 @@ import type { PageData } from "./$types.ts";
 
 import Card from "$lib/components/Card.svelte";
 import Collapsible from "$lib/components/Collapsible.svelte";
+import Logo from "$lib/components/Logo.svelte";
 import Trigger from "$lib/components/Trigger.svelte";
 import { createIcsEntry } from "$lib/create-ics-entry.ts";
 import { blurOnEscape, selectTextOnFocus } from "$lib/directives.ts";
@@ -119,13 +120,17 @@ $effect(() => {
 
 <svelte:head>
 	<title>olympicks</title>
-	<meta name="description"
-		content="export 2024 summer olympic events to your calendar"
-	/>
+	<meta name="description" content="export 2024 summer olympic events to your calendar" />
+
+	<meta property="og:title" content="olympicks">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://olympicks.xyz">
+	<meta property="og:image" content="https://olympics.xyz/og.png">
+	<meta property="og:description" content="export 2024 summer olympic events to your calendar">
 </svelte:head>
 
 <div class="comic-sans">
-	<h1 class="text-4xl text-center font-bold mb-2">olympicks</h1>
+	<Logo class="w-36 mx-auto mb-2"/>
 	<p class="text-center text-gray-500 mb-2 text-balance">
 		export 2024 summer olympic events to your calendar
 	</p>
