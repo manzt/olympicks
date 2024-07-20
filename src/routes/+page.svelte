@@ -187,6 +187,7 @@ $effect(() => {
 							item.reset();
 						}
 					}
+					search = "";
 				}}
 				><b>reset</b></button
 			>
