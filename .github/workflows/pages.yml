@@ -16,9 +16,7 @@ jobs:
       - uses: pnpm/action-setup@v3
         with:
           run_install: true
-      - env:
-          BASE_PATH: '/${{ github.event.repository.name }}'
-        run: |
+      - run: |
           pnpm build
       - uses: actions/upload-pages-artifact@v3
         with:
