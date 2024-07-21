@@ -9,8 +9,10 @@ import Card from "$lib/components/Card.svelte";
 import Collapsible from "$lib/components/Collapsible.svelte";
 import Logo from "$lib/components/Logo.svelte";
 import Trigger from "$lib/components/Trigger.svelte";
-import { createIcsEntry } from "$lib/create-ics-entry.ts";
+
+import { createIcsFileContents } from "$lib/create-ics-file-contents.ts";
 import { blurOnEscape, selectTextOnFocus } from "$lib/directives.ts";
+import { downloadFile } from "$lib/download-file.ts";
 import { groupBy } from "$lib/group-by.ts";
 import { EventGroup, SelectableEvent } from "$lib/state.svelte.ts";
 
@@ -166,16 +168,10 @@ $effect(() => {
 				title="Export selected events to .ics file"
 				onmousedown={async () => {
 					posthog.capture("Export Calendar Events", { checked: checked.map((e) => e.id).join(" ") });
-					let contents = createIcsEntry(checked);
-					let file = new File([contents], "olympicks.ics", {
-						type: "text/calendar",
+					downloadFile(createIcsFileContents(checked), {
+						name: "olympicks.ics",
+						type: "text/calendar"
 					});
-					let url = URL.createObjectURL(file);
-					let a = document.createElement("a");
-					a.href = url;
-					a.download = "olympicks.ics";
-					a.click();
-					URL.revokeObjectURL(url);
 				}}><b>export</b> .ics</button
 			>
 			<button

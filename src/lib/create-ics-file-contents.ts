@@ -92,7 +92,7 @@ function combineEntries(
 	return [...merged.flat(), ...matches];
 }
 
-export function createIcsEntry(events: Array<schema.Event>): string {
+export function createIcsFileContents(events: Array<schema.Event>): string {
 	let result = ics.createEvents(
 		combineEntries(events).map((event) => ({
 			title: event.title,
