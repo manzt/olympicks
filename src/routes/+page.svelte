@@ -110,6 +110,14 @@ $effect(() => {
 					event.description.toLowerCase(),
 					event.discipline.name.toLowerCase(),
 					event.discipline.shortName.toLowerCase(),
+					...(event.match.kind === "known"
+						? [
+								event.match.team1.name.toLowerCase(),
+								event.match.team2.name.toLowerCase(),
+								event.match.team1.shortName.toLowerCase(),
+								event.match.team2.shortName.toLowerCase(),
+							]
+						: []),
 				];
 				event.visible = tokens.every((t) =>
 					toSearch.some((str) => str.includes(t)),
