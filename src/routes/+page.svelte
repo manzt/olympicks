@@ -16,7 +16,11 @@ import { downloadFile } from "$lib/download-file.ts";
 import { groupBy } from "$lib/group-by.ts";
 import { EventGroup, SelectableEvent } from "$lib/state.svelte.ts";
 
-let events = ($page.data as PageData).events.map((e) => new SelectableEvent(e));
+let now = new Date();
+let events = ($page.data as PageData).events
+	.map((e) => new SelectableEvent(e))
+	.filter((e) => new Date(e.start) >= now);
+
 let byMonthDay = groupBy(events, (item) => stringifyMonthDay(item.start));
 let byMonthDayAndDiscipline: Record<string, Array<EventGroup>> = {};
 
